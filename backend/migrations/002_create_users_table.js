@@ -1,3 +1,4 @@
+//duplicate
 exports.up = (pgm) => {
   pgm.createTable('users', {
     id: { type: 'uuid', primaryKey: true },
@@ -9,12 +10,16 @@ exports.up = (pgm) => {
     updated_at: { type: 'timestamp', notNull: true, default: pgm.func('now()') },
     last_active: { type: 'timestamp', notNull: true, default: pgm.func('now()') },
     coins: { type: 'integer', notNull: true, default: 0 },
-    stats: { type: 'jsonb', notNull: true, default: '{"gamesPlayed":0,"gamesWon":0,"gamesLost":0}' }
+    stats: {
+      type: 'jsonb',
+      notNull: true,
+      default: '{"gamesPlayed":0,"gamesWon":0,"gamesLost":0}',
+    },
   });
 
   // Create index on username for faster lookups
   pgm.createIndex('users', 'username');
-  
+
   // Create index on last_active for cleanup queries
   pgm.createIndex('users', 'last_active');
 };
