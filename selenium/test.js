@@ -8,32 +8,30 @@ const browsers = ['chrome', 'firefox'];
 
 async function testBrowser(browserName) {
   console.log(`\n=== Testing ${browserName.toUpperCase()} browser ===`);
-  
-  let driver = await new Builder()
-    .forBrowser(browserName)
-    .usingServer(seleniumRemoteUrl)
-    .build();
-    
+
+  let driver = await new Builder().forBrowser(browserName).usingServer(seleniumRemoteUrl).build();
+
   try {
     console.log(`Navigating to ${frontendUrl} with ${browserName}`);
     await driver.get(frontendUrl);
-    
+
     // Wait for the page to load
     await driver.wait(until.elementLocated(By.css('body')), 10000);
-    
+
     // Get and verify the title
     const title = await driver.getTitle();
     console.log(`✓ Page title in ${browserName}: "${title}"`);
-    
+
     // Basic assertion - check if title contains expected content
     if (title.includes('7-hand')) {
       console.log(`✓ SUCCESS: Title verification passed for ${browserName}`);
       return true;
     } else {
-      console.log(`✗ FAILURE: Expected title to contain "7-hand", but got "${title}" in ${browserName}`);
+      console.log(
+        `✗ FAILURE: Expected title to contain "7-hand", but got "${title}" in ${browserName}`
+      );
       return false;
     }
-    
   } catch (error) {
     console.log(`✗ ERROR testing ${browserName}: ${error.message}`);
     return false;
@@ -46,9 +44,9 @@ async function testBrowser(browserName) {
   console.log('Starting cross-browser title tests...');
   console.log(`Selenium Grid URL: ${seleniumRemoteUrl}`);
   console.log(`Frontend URL: ${frontendUrl}`);
-  
+
   let allTestsPassed = true;
-  
+
   for (const browser of browsers) {
     try {
       const result = await testBrowser(browser);
@@ -60,7 +58,7 @@ async function testBrowser(browserName) {
       allTestsPassed = false;
     }
   }
-  
+
   console.log('\n=== Test Summary ===');
   if (allTestsPassed) {
     console.log('✓ All browser tests passed successfully!');

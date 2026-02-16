@@ -7,9 +7,8 @@ describe('CookieConsent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CookieConsent]
-    })
-    .compileComponents();
+      imports: [CookieConsent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CookieConsent);
     component = fixture.componentInstance;

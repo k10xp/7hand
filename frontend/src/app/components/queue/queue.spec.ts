@@ -8,9 +8,8 @@ describe('Queue', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Queue]
-    })
-    .compileComponents();
+      imports: [Queue],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Queue);
     component = fixture.componentInstance;

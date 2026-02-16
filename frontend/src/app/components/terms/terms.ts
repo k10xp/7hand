@@ -5,8 +5,6 @@ import { RouterLink } from '@angular/router';
   selector: 'app-terms',
   imports: [RouterLink],
   templateUrl: './terms.html',
-  styleUrl: './terms.css'
+  styleUrl: './terms.css',
 })
-export class Terms {
-
-}
+export class Terms {}

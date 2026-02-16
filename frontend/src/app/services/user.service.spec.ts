@@ -9,7 +9,7 @@ describe('UserService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [UserService]
+      providers: [UserService],
     });
     service = TestBed.inject(UserService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -28,7 +28,7 @@ describe('UserService', () => {
       username: 'testuser',
       password: 'password123',
       displayName: 'Test User',
-      email: 'test@example.com'
+      email: 'test@example.com',
     };
 
     const mockUser: User = {
@@ -38,7 +38,7 @@ describe('UserService', () => {
       coins: 0,
       stats: { gamesPlayed: 0, gamesWon: 0, gamesLost: 0 },
       createdAt: '2025-10-22T00:00:00.000Z',
-      lastActive: '2025-10-22T00:00:00.000Z'
+      lastActive: '2025-10-22T00:00:00.000Z',
     };
 
     service.registerUser(registerUserRequest).subscribe((user: User) => {
@@ -59,10 +59,10 @@ describe('UserService', () => {
       coins: 0,
       stats: { gamesPlayed: 0, gamesWon: 0, gamesLost: 0 },
       createdAt: '2025-10-22T00:00:00.000Z',
-      lastActive: '2025-10-22T00:00:00.000Z'
+      lastActive: '2025-10-22T00:00:00.000Z',
     };
 
-    service.getUserById('123').subscribe(user => {
+    service.getUserById('123').subscribe((user) => {
       expect(user).toEqual(mockUser);
     });
 
@@ -79,10 +79,10 @@ describe('UserService', () => {
       coins: 0,
       stats: { gamesPlayed: 0, gamesWon: 0, gamesLost: 0 },
       createdAt: '2025-10-22T00:00:00.000Z',
-      lastActive: '2025-10-22T00:00:00.000Z'
+      lastActive: '2025-10-22T00:00:00.000Z',
     };
 
-    service.getUserByUsername('testuser').subscribe(user => {
+    service.getUserByUsername('testuser').subscribe((user) => {
       expect(user).toEqual(mockUser);
     });
 
@@ -99,10 +99,10 @@ describe('UserService', () => {
       coins: 0,
       stats: { gamesPlayed: 0, gamesWon: 0, gamesLost: 0 },
       createdAt: '2025-10-22T00:00:00.000Z',
-      lastActive: '2025-10-22T00:00:00.000Z'
+      lastActive: '2025-10-22T00:00:00.000Z',
     };
 
-    service.updateUser('123', { displayName: 'Updated Name' }).subscribe(user => {
+    service.updateUser('123', { displayName: 'Updated Name' }).subscribe((user) => {
       expect(user).toEqual(mockUser);
     });
 
@@ -112,7 +112,7 @@ describe('UserService', () => {
   });
 
   it('should delete user', () => {
-    service.deleteUser('123').subscribe(response => {
+    service.deleteUser('123').subscribe((response) => {
       expect(response.success).toBe(true);
     });
 

@@ -7,9 +7,9 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-registration',
-  imports: [ RegistrationForm, LoginForm, RouterLink, RulesDisplay, CommonModule],
+  imports: [RegistrationForm, LoginForm, RouterLink, RulesDisplay, CommonModule],
   templateUrl: './registration.html',
-  styleUrls: ['./registration.css']
+  styleUrls: ['./registration.css'],
 })
 export class Registration {
   showLogin = false;

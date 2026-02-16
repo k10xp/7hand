@@ -1,5 +1,12 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
@@ -9,11 +16,11 @@ import { ProfanityValidatorService } from '../../services/profanity-validator.se
   selector: 'app-registration-form',
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './registration-form.html',
-  styleUrls: ['./registration-form.css']
+  styleUrls: ['./registration-form.css'],
 })
 export class RegistrationForm implements OnInit {
   @Output() loginClick = new EventEmitter<void>();
-  
+
   registrationForm: FormGroup;
   isLoading = false;
   errorMessage = '';
@@ -27,24 +34,24 @@ export class RegistrationForm implements OnInit {
     private profanityValidator: ProfanityValidatorService
   ) {
     this.registrationForm = this.formBuilder.group({
-      username: ['', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(20),
-        Validators.pattern(/^[a-zA-Z0-9_-]+$/)
-      ]],
+      username: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(20),
+          Validators.pattern(/^[a-zA-Z0-9_-]+$/),
+        ],
+      ],
       displayName: ['', [Validators.maxLength(30)]],
       email: ['', [Validators.email]],
-      password: ['', [
-        Validators.required,
-        Validators.minLength(8)
-      ]]
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 
   ngOnInit(): void {
     // Add profanity validators after rules are loaded
-    this.profanityValidator.getRules().subscribe(rules => {
+    this.profanityValidator.getRules().subscribe((rules) => {
       if (rules) {
         const usernameControl = this.registrationForm.get('username');
         const displayNameControl = this.registrationForm.get('displayName');
@@ -55,21 +62,19 @@ export class RegistrationForm implements OnInit {
           Validators.minLength(3),
           Validators.maxLength(20),
           Validators.pattern(/^[a-zA-Z0-9_-]+$/),
-          this.profanityValidatorFn('username')
+          this.profanityValidatorFn('username'),
         ]);
         usernameControl?.updateValueAndValidity({ emitEvent: false });
 
         // Add profanity validator to display name
         displayNameControl?.setValidators([
           Validators.maxLength(30),
-          this.profanityValidatorFn('displayName')
+          this.profanityValidatorFn('displayName'),
         ]);
         displayNameControl?.updateValueAndValidity({ emitEvent: false });
       }
     });
   }
-
-
 
   /**
    * Custom validator function for profanity checking
@@ -80,9 +85,10 @@ export class RegistrationForm implements OnInit {
         return null;
       }
 
-      const validationResult = fieldName === 'username'
-        ? this.profanityValidator.validateUsername(control.value)
-        : this.profanityValidator.validateDisplayName(control.value);
+      const validationResult =
+        fieldName === 'username'
+          ? this.profanityValidator.validateUsername(control.value)
+          : this.profanityValidator.validateDisplayName(control.value);
 
       return validationResult.valid ? null : { profanity: true };
     };
@@ -99,7 +105,7 @@ export class RegistrationForm implements OnInit {
         username: formValue.username,
         password: formValue.password,
         displayName: formValue.displayName || formValue.username,
-        email: formValue.email || undefined
+        email: formValue.email || undefined,
       };
 
       this.userService.registerUser(userData).subscribe({
@@ -117,13 +123,17 @@ export class RegistrationForm implements OnInit {
           this.isLoading = false;
           if (error.status === 400) {
             this.errorMessage = error.error.error || 'Invalid user data. Please check your input.';
-          } else if (error.status === 409 || error.error.error?.includes('duplicate') || error.error.error?.includes('unique')) {
+          } else if (
+            error.status === 409 ||
+            error.error.error?.includes('duplicate') ||
+            error.error.error?.includes('unique')
+          ) {
             this.errorMessage = 'Username already exists. Please choose a different username.';
           } else {
             this.errorMessage = 'Failed to create account. Please try again.';
           }
           console.error('Registration error:', error);
-        }
+        },
       });
     } else {
       this.markFormGroupTouched();
@@ -131,7 +141,7 @@ export class RegistrationForm implements OnInit {
   }
 
   private markFormGroupTouched(): void {
-    Object.keys(this.registrationForm.controls).forEach(field => {
+    Object.keys(this.registrationForm.controls).forEach((field) => {
       const control = this.registrationForm.get(field);
       control?.markAsTouched({ onlySelf: true });
     });

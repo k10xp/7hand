@@ -1,38 +1,20 @@
 <div class="lobby-header">
-    <div class="lobby-info">
-      <h2 class="lobby-title">7hand</h2>
-    </div>
-    <div class="lobby-user-coins">💰{{ userCoins }}</div>
-    <div class="lobby-actions">
-      <button class="btn-icon" (click)="openProfileModal()" title="Profile">
-        👤
-      </button>
-      <button class="btn-icon" (click)="openRulesModal()" title="Rules">
-        📖
-      </button>
-      <button class="btn-danger" (click)="logout()">
-        Logout
-      </button>
-    </div>
+  <div class="lobby-info">
+    <h2 class="lobby-title">7hand</h2>
   </div>
-  
+  <div class="lobby-user-coins">💰{{ userCoins }}</div>
+  <div class="lobby-actions">
+    <button class="btn-icon" (click)="openProfileModal()" title="Profile">👤</button>
+    <button class="btn-icon" (click)="openRulesModal()" title="Rules">📖</button>
+    <button class="btn-danger" (click)="logout()">Logout</button>
+  </div>
+</div>
+
 <!-- Profile Modal -->
-<app-modal 
-  [isOpen]="showProfileModal" 
-  [title]="'User Profile'" 
-  (close)="closeProfileModal()"
->
-  <app-user-profile 
-    *ngIf="currentUser"
-    [user]="currentUser"
-    (logout)="logout()"
-  ></app-user-profile>
+<app-modal [isOpen]="showProfileModal" [title]="'User Profile'" (close)="closeProfileModal()">
+  <app-user-profile *ngIf="currentUser" [user]="currentUser" (logout)="logout()"></app-user-profile>
 </app-modal>
 <!-- Rules Modal -->
-<app-modal 
-  [isOpen]="showRulesModal" 
-  [title]="'Game Rules'" 
-  (close)="closeRulesModal()"
->
+<app-modal [isOpen]="showRulesModal" [title]="'Game Rules'" (close)="closeRulesModal()">
   <app-rules-display></app-rules-display>
 </app-modal>

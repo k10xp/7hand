@@ -8,7 +8,7 @@ const { SLUR_LIST, OBFUSCATION_PATTERNS } = require('./slur-list');
  * - Converts to lowercase
  * - Strips diacritics (accents)
  * - Collapses repeated characters
- * 
+ *
  * @param {string} text - Text to normalize
  * @returns {string} Normalized text
  */
@@ -40,7 +40,7 @@ function normalizeText(text) {
 /**
  * Check if text contains profanity
  * Uses both direct matching and regex patterns
- * 
+ *
  * @param {string} text - Text to check
  * @returns {boolean} True if profanity detected
  */
@@ -74,7 +74,7 @@ function containsProfanity(text) {
 /**
  * Validate text against profanity filter
  * Returns a validation result with generic error message
- * 
+ *
  * @param {string} text - Text to validate
  * @param {string} fieldName - Name of the field being validated (for error message)
  * @returns {Object} { valid: boolean, error: string|null }
@@ -84,19 +84,19 @@ function validateText(text, fieldName = 'Text') {
     // Generic error - don't reveal which slur was detected
     return {
       valid: false,
-      error: `${fieldName} contains inappropriate content`
+      error: `${fieldName} contains inappropriate content`,
     };
   }
 
   return {
     valid: true,
-    error: null
+    error: null,
   };
 }
 
 /**
  * Validate username against profanity filter
- * 
+ *
  * @param {string} username - Username to validate
  * @returns {Object} { valid: boolean, error: string|null }
  */
@@ -106,7 +106,7 @@ function validateUsername(username) {
 
 /**
  * Validate display name against profanity filter
- * 
+ *
  * @param {string} displayName - Display name to validate
  * @returns {Object} { valid: boolean, error: string|null }
  */
@@ -119,5 +119,5 @@ module.exports = {
   containsProfanity,
   validateText,
   validateUsername,
-  validateDisplayName
+  validateDisplayName,
 };

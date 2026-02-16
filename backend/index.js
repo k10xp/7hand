@@ -16,7 +16,12 @@ const configRoutes = require('./routes/config');
 const app = express();
 const PORT = 3000;
 
-app.use(cors({ origin: ['http://localhost', 'http://localhost:4200', 'http://localhost:80'], credentials: true }));
+app.use(
+  cors({
+    origin: ['http://localhost', 'http://localhost:4200', 'http://localhost:80'],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 const lobbyManager = new LobbyManager();
@@ -37,9 +42,12 @@ try {
 }
 
 // Periodic cleanup of inactive lobbies every 30 minutes
-const timer = setInterval(() => {
-  cleanupInactiveLobbies(2).catch(err => logger.error('Cleanup failed', err));
-}, 30 * 60 * 1000);
+const timer = setInterval(
+  () => {
+    cleanupInactiveLobbies(2).catch((err) => logger.error('Cleanup failed', err));
+  },
+  30 * 60 * 1000
+);
 
 // Root endpoint
 app.get('/', (req, res) => {

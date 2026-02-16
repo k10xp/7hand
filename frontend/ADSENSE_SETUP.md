@@ -45,8 +45,11 @@ While the component loads scripts dynamically, you can also add it to `index.htm
 ```html
 <head>
   <!-- Other head content -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
-     crossorigin="anonymous"></script>
+  <script
+    async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+    crossorigin="anonymous"
+  ></script>
 </head>
 ```
 
@@ -55,10 +58,7 @@ While the component loads scripts dynamically, you can also add it to `index.htm
 ### Basic Usage
 
 ```html
-<app-google-adsense
-  [adClient]="'ca-pub-XXXXXXXXXXXXXXXX'"
-  [adSlot]="'1234567890'"
-  adFormat="auto">
+<app-google-adsense [adClient]="'ca-pub-XXXXXXXXXXXXXXXX'" [adSlot]="'1234567890'" adFormat="auto">
 </app-google-adsense>
 ```
 
@@ -70,7 +70,8 @@ While the component loads scripts dynamically, you can also add it to `index.htm
   [adClient]="adsenseService.getConfig().adClient"
   [adSlot]="adsenseService.getAdSlot('sidebarLeft')"
   adFormat="vertical"
-  [adTest]="adsenseService.isTestMode() ? 'on' : 'off'">
+  [adTest]="adsenseService.isTestMode() ? 'on' : 'off'"
+>
 </app-google-adsense>
 ```
 
@@ -84,6 +85,7 @@ The mobile popup ad component is automatically included in the app and requires 
 ```
 
 **Features:**
+
 - Automatically shows only on mobile/tablet (<1024px)
 - 5-second delay before appearing
 - Once per session (won't annoy users)
@@ -92,13 +94,13 @@ The mobile popup ad component is automatically included in the app and requires 
 
 ## Component Properties
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `adClient` | string | 'ca-pub-XXXXXXXXXXXXXXXX' | Your AdSense publisher ID |
-| `adSlot` | string | '' | Ad unit slot ID from AdSense |
-| `adFormat` | string | 'auto' | Ad format: 'auto', 'rectangle', 'vertical', 'horizontal' |
-| `fullWidthResponsive` | boolean | true | Enable responsive sizing |
-| `adTest` | string | 'off' | Set to 'on' for testing, 'off' for production |
+| Property              | Type    | Default                   | Description                                              |
+| --------------------- | ------- | ------------------------- | -------------------------------------------------------- |
+| `adClient`            | string  | 'ca-pub-XXXXXXXXXXXXXXXX' | Your AdSense publisher ID                                |
+| `adSlot`              | string  | ''                        | Ad unit slot ID from AdSense                             |
+| `adFormat`            | string  | 'auto'                    | Ad format: 'auto', 'rectangle', 'vertical', 'horizontal' |
+| `fullWidthResponsive` | boolean | true                      | Enable responsive sizing                                 |
+| `adTest`              | string  | 'off'                     | Set to 'on' for testing, 'off' for production            |
 
 ## Ad Formats
 
@@ -110,19 +112,24 @@ The mobile popup ad component is automatically included in the app and requires 
 ## Current Implementation
 
 The app currently has:
+
 - **Left Sidebar Ad**: Vertical ad unit on the left side (visible on screens ≥1440px)
 - **Right Sidebar Ad**: Vertical ad unit on the right side (visible on screens ≥1440px)
 - **Mobile Popup Ad**: Pop-up advertisement with close button (visible on screens <1024px)
 
 ### Desktop Ads (Sidebars)
+
 Both sidebar ads:
+
 - Only show when users consent to advertising cookies
 - Sticky positioning for better visibility
 - Automatically disabled on mobile/tablet devices
 - Test mode enabled by default (change in production)
 
 ### Mobile Popup Ad
+
 The mobile popup ad:
+
 - ✅ Only appears on mobile/tablet screens (<1024px)
 - ✅ Shows after 5-second delay (non-intrusive)
 - ✅ Only displays once per session
@@ -190,9 +197,11 @@ Before deploying to production:
 ## Support
 
 For AdSense-specific issues, visit:
+
 - [AdSense Help Center](https://support.google.com/adsense)
 - [AdSense Community](https://support.google.com/adsense/community)
 
 For technical implementation issues, check:
+
 - Component files in `/workspace/src/app/components/google-adsense/`
 - Service file in `/workspace/src/app/services/adsense.service.ts`

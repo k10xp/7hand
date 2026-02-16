@@ -17,9 +17,12 @@ const signalingMessages = new Map();
 const MAX_MESSAGES_PER_USER = 100;
 
 // Cleanup old messages periodically
-setInterval(() => {
-  cleanupOldSignalingMessages();
-}, 5 * 60 * 1000); // Every 5 minutes
+setInterval(
+  () => {
+    cleanupOldSignalingMessages();
+  },
+  5 * 60 * 1000
+); // Every 5 minutes
 
 function cleanupOldSignalingMessages() {
   signalingMessages.forEach((lobbyMessages, lobbyId) => {
@@ -40,7 +43,7 @@ function setManagers(lobby, user) {
 router.post('/', async (req, res) => {
   const { userId } = req.body;
   if (!userId) return res.status(400).json({ error: 'User ID required' });
-  
+
   // Get or load user
   let user = userManager.getUser(userId);
   if (!user) {
@@ -56,13 +59,13 @@ router.post('/', async (req, res) => {
       createdAt: dbUser.created_at,
       updatedAt: dbUser.updated_at,
       lastActive: dbUser.last_active,
-      stats: dbUser.stats
+      stats: dbUser.stats,
     });
   }
-  
+
   user.updateActivity();
   await updateUserActivity(userId);
-  
+
   const lobby = lobbyManager.createLobby(user.toSafeObject());
   await saveLobbyToDb(lobby);
   logger.info(`Lobby created: ${lobby.id} by user ${user.username}`);
@@ -72,9 +75,9 @@ router.post('/', async (req, res) => {
 router.post('/:lobbyId/join', async (req, res) => {
   const { userId } = req.body;
   const { lobbyId } = req.params;
-  
+
   if (!userId) return res.status(400).json({ error: 'User ID required' });
-  
+
   // Get or load user
   let user = userManager.getUser(userId);
   if (!user) {
@@ -90,16 +93,16 @@ router.post('/:lobbyId/join', async (req, res) => {
       createdAt: dbUser.created_at,
       updatedAt: dbUser.updated_at,
       lastActive: dbUser.last_active,
-      stats: dbUser.stats
+      stats: dbUser.stats,
     });
   }
-  
+
   user.updateActivity();
   await updateUserActivity(userId);
-  
+
   const lobby = lobbyManager.getLobby(lobbyId);
   if (!lobby) return res.status(404).json({ error: 'Lobby not found' });
-  
+
   lobby.addUser(user.toSafeObject());
   await saveLobbyToDb(lobby);
   logger.info(`User ${user.username} joined lobby ${lobby.id}`);
@@ -139,49 +142,51 @@ router.delete('/:lobbyId', async (req, res) => {
 router.post('/:lobbyId/signal', (req, res) => {
   const { lobbyId } = req.params;
   const message = req.body;
-  
+
   if (!message.type || !message.from || !message.to) {
     return res.status(400).json({ error: 'Invalid signaling message' });
   }
-  
+
   // Initialize lobby signaling storage if needed
   if (!signalingMessages.has(lobbyId)) {
     signalingMessages.set(lobbyId, new Map());
   }
-  
+
   const lobbyMessages = signalingMessages.get(lobbyId);
-  
+
   // Initialize user message queue if needed
   if (!lobbyMessages.has(message.to)) {
     lobbyMessages.set(message.to, []);
   }
-  
+
   // Add message to recipient's queue with size limit
   const userMessages = lobbyMessages.get(message.to);
   userMessages.push(message);
-  
+
   // Keep only the most recent messages to prevent memory issues
   if (userMessages.length > MAX_MESSAGES_PER_USER) {
     lobbyMessages.set(message.to, userMessages.slice(-MAX_MESSAGES_PER_USER));
   }
-  
-  logger.info(`Signaling message queued in lobby ${lobbyId}: ${message.type} from ${message.from} to ${message.to}`);
+
+  logger.info(
+    `Signaling message queued in lobby ${lobbyId}: ${message.type} from ${message.from} to ${message.to}`
+  );
   res.json({ success: true });
 });
 
 // Get signaling messages for a user
 router.get('/:lobbyId/signal/:userId', (req, res) => {
   const { lobbyId, userId } = req.params;
-  
+
   const lobbyMessages = signalingMessages.get(lobbyId);
   if (!lobbyMessages || !lobbyMessages.has(userId)) {
     return res.json([]);
   }
-  
+
   // Get all messages for this user and clear the queue
   const messages = lobbyMessages.get(userId) || [];
   lobbyMessages.set(userId, []);
-  
+
   res.json(messages);
 });
 
@@ -189,21 +194,21 @@ router.get('/:lobbyId/signal/:userId', (req, res) => {
 router.post('/:lobbyId/notify-joined', (req, res) => {
   const { lobbyId } = req.params;
   const { userId } = req.body;
-  
+
   if (!userId) return res.status(400).json({ error: 'User ID required' });
-  
+
   const lobby = lobbyManager.getLobby(lobbyId);
   if (!lobby) return res.status(404).json({ error: 'Lobby not found' });
-  
+
   // Initialize lobby signaling storage if needed
   if (!signalingMessages.has(lobbyId)) {
     signalingMessages.set(lobbyId, new Map());
   }
-  
+
   const lobbyMessages = signalingMessages.get(lobbyId);
-  
+
   // Notify all other users in the lobby
-  lobby.users.forEach(user => {
+  lobby.users.forEach((user) => {
     if (user.id !== userId) {
       if (!lobbyMessages.has(user.id)) {
         lobbyMessages.set(user.id, []);
@@ -211,11 +216,11 @@ router.post('/:lobbyId/notify-joined', (req, res) => {
       lobbyMessages.get(user.id).push({
         type: 'peer-joined',
         from: userId,
-        to: user.id
+        to: user.id,
       });
     }
   });
-  
+
   logger.info(`User ${userId} joined lobby ${lobbyId}, notifications sent`);
   res.json({ success: true });
 });
@@ -224,21 +229,21 @@ router.post('/:lobbyId/notify-joined', (req, res) => {
 router.post('/:lobbyId/notify-left', (req, res) => {
   const { lobbyId } = req.params;
   const { userId } = req.body;
-  
+
   if (!userId) return res.status(400).json({ error: 'User ID required' });
-  
+
   const lobby = lobbyManager.getLobby(lobbyId);
-  
+
   // Initialize lobby signaling storage if needed
   if (!signalingMessages.has(lobbyId)) {
     signalingMessages.set(lobbyId, new Map());
   }
-  
+
   const lobbyMessages = signalingMessages.get(lobbyId);
-  
+
   // Notify all users in the lobby (even if lobby doesn't exist)
   if (lobby) {
-    lobby.users.forEach(user => {
+    lobby.users.forEach((user) => {
       if (user.id !== userId) {
         if (!lobbyMessages.has(user.id)) {
           lobbyMessages.set(user.id, []);
@@ -246,15 +251,15 @@ router.post('/:lobbyId/notify-left', (req, res) => {
         lobbyMessages.get(user.id).push({
           type: 'peer-left',
           from: userId,
-          to: user.id
+          to: user.id,
         });
       }
     });
   }
-  
+
   // Clean up user's message queue
   lobbyMessages.delete(userId);
-  
+
   logger.info(`User ${userId} left lobby ${lobbyId}, notifications sent`);
   res.json({ success: true });
 });
@@ -263,16 +268,16 @@ router.post('/:lobbyId/notify-left', (req, res) => {
 router.post('/:lobbyId/leave', async (req, res) => {
   const { userId } = req.body;
   const { lobbyId } = req.params;
-  
+
   if (!userId) return res.status(400).json({ error: 'User ID required' });
-  
+
   const lobby = lobbyManager.getLobby(lobbyId);
   if (!lobby) return res.status(404).json({ error: 'Lobby not found' });
-  
+
   // Remove user from lobby
-  lobby.users = lobby.users.filter(u => u.id !== userId);
+  lobby.users = lobby.users.filter((u) => u.id !== userId);
   await saveLobbyToDb(lobby);
-  
+
   logger.info(`User ${userId} left lobby ${lobbyId}`);
   res.json({ success: true });
 });

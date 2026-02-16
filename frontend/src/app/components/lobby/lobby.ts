@@ -20,7 +20,7 @@ interface Player {
   standalone: true,
   imports: [CommonModule, HeaderComponent],
   templateUrl: './lobby.html',
-  styleUrls: ['./lobby.css']
+  styleUrls: ['./lobby.css'],
 })
 export class Lobby implements OnInit, OnDestroy {
   userCoins = 0;
@@ -30,7 +30,7 @@ export class Lobby implements OnInit, OnDestroy {
   isHost = false;
   currentUserId: string | null = null;
   currentUser: User | null = null;
-  
+
   showProfileModal = false;
   showRulesModal = false;
 
@@ -82,7 +82,7 @@ export class Lobby implements OnInit, OnDestroy {
           id: user.id,
           username: user.username,
           displayName: user.displayName,
-          position: user.position ?? index
+          position: user.position ?? index,
         }));
         this.isHost = this.currentUserId === this.players[0]?.id;
       }
@@ -99,7 +99,7 @@ export class Lobby implements OnInit, OnDestroy {
     try {
       // Initialize signaling for this lobby
       await this.signalingService.initializeForLobby(this.lobbyId, this.currentUserId);
-      
+
       // Notify other users that we joined
       await firstValueFrom(this.signalingService.notifyJoined(this.lobbyId, this.currentUserId));
     } catch (error) {
@@ -109,7 +109,7 @@ export class Lobby implements OnInit, OnDestroy {
 
   private handleP2PMessage(message: any): void {
     console.log('Received P2P message:', message);
-    
+
     // Handle different message types
     switch (message.type) {
       case 'gameState':
@@ -129,18 +129,18 @@ export class Lobby implements OnInit, OnDestroy {
 
   private cleanup(): void {
     // Unsubscribe from all subscriptions
-    this.subscriptions.forEach(sub => sub.unsubscribe());
-    
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+
     // Notify others we're leaving
     if (this.lobbyId && this.currentUserId) {
       this.signalingService.notifyLeft(this.lobbyId, this.currentUserId).subscribe({
-        error: (error) => console.error('Error notifying peers of leaving:', error)
+        error: (error) => console.error('Error notifying peers of leaving:', error),
       });
     }
-    
+
     // Clean up signaling
     this.signalingService.cleanup();
-    
+
     // Close all WebRTC connections
     this.webrtcService.closeAllConnections();
   }
@@ -166,22 +166,21 @@ export class Lobby implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error loading lobby:', error);
-      }
+      },
     });
   }
 
   getPlayerAtPosition(position: number): Player | null {
-    return this.players.find(p => p.position === position) || null;
+    return this.players.find((p) => p.position === position) || null;
   }
 
   isPositionOccupied(position: number): boolean {
-    return this.players.some(p => p.position === position);
+    return this.players.some((p) => p.position === position);
   }
 
   getEmptySeats(): number[] {
-    const occupied = new Set(this.players.map(p => p.position));
-    return Array.from({ length: this.maxPlayers }, (_, i) => i)
-      .filter(i => !occupied.has(i));
+    const occupied = new Set(this.players.map((p) => p.position));
+    return Array.from({ length: this.maxPlayers }, (_, i) => i).filter((i) => !occupied.has(i));
   }
 
   leaveLobby(): void {
@@ -193,7 +192,7 @@ export class Lobby implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('Error leaving lobby:', error);
-        }
+        },
       });
     }
   }
@@ -201,13 +200,13 @@ export class Lobby implements OnInit, OnDestroy {
   startGame(): void {
     if (this.isHost && this.players.length >= 2) {
       console.log('Starting game...');
-      
+
       // Broadcast game start to all peers via P2P
       this.webrtcService.broadcast('gameStart', {
         players: this.players,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
-      
+
       // Navigate to game or update state
       // TODO: Implement game start logic
     }
@@ -219,6 +218,4 @@ export class Lobby implements OnInit, OnDestroy {
       console.log('Lobby link copied!');
     });
   }
-
- 
 }

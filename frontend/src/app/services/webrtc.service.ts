@@ -14,12 +14,12 @@ export interface PeerConnection {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WebRTCService {
   private peerConnections = new Map<string, PeerConnection>();
   private localStream: MediaStream | null = null;
-  
+
   // Observables for events
   public dataChannelMessage$ = new Subject<DataChannelMessage>();
   public peerConnected$ = new Subject<string>();
@@ -28,8 +28,8 @@ export class WebRTCService {
   private configuration: RTCConfiguration = {
     iceServers: [
       { urls: 'stun:stun.l.google.com:19302' },
-      { urls: 'stun:stun1.l.google.com:19302' }
-    ]
+      { urls: 'stun:stun1.l.google.com:19302' },
+    ],
   };
 
   constructor() {}
@@ -37,7 +37,10 @@ export class WebRTCService {
   /**
    * Create a new peer connection for a specific peer
    */
-  async createPeerConnection(peerId: string, isInitiator: boolean = false): Promise<RTCPeerConnection> {
+  async createPeerConnection(
+    peerId: string,
+    isInitiator: boolean = false
+  ): Promise<RTCPeerConnection> {
     if (this.peerConnections.has(peerId)) {
       const existing = this.peerConnections.get(peerId);
       if (existing && existing.connection.connectionState !== 'closed') {
@@ -68,9 +71,11 @@ export class WebRTCService {
     peerConnection.oniceconnectionstatechange = () => {
       if (peerConnection.iceConnectionState === 'connected') {
         this.peerConnected$.next(peerId);
-      } else if (peerConnection.iceConnectionState === 'disconnected' || 
-                 peerConnection.iceConnectionState === 'failed' ||
-                 peerConnection.iceConnectionState === 'closed') {
+      } else if (
+        peerConnection.iceConnectionState === 'disconnected' ||
+        peerConnection.iceConnectionState === 'failed' ||
+        peerConnection.iceConnectionState === 'closed'
+      ) {
         this.peerDisconnected$.next(peerId);
       }
     };
@@ -78,7 +83,7 @@ export class WebRTCService {
     this.peerConnections.set(peerId, {
       peerId,
       connection: peerConnection,
-      dataChannel
+      dataChannel,
     });
 
     return peerConnection;
@@ -102,7 +107,7 @@ export class WebRTCService {
         this.dataChannelMessage$.next({
           type: message.type,
           data: message.data,
-          from: peerId
+          from: peerId,
         });
       } catch (error) {
         console.error('Error parsing data channel message:', error);
@@ -123,7 +128,10 @@ export class WebRTCService {
   /**
    * Create an answer for a peer's offer
    */
-  async createAnswer(peerId: string, offer: RTCSessionDescriptionInit): Promise<RTCSessionDescriptionInit> {
+  async createAnswer(
+    peerId: string,
+    offer: RTCSessionDescriptionInit
+  ): Promise<RTCSessionDescriptionInit> {
     const peerConnection = await this.createPeerConnection(peerId, false);
     await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
     const answer = await peerConnection.createAnswer();
@@ -222,7 +230,9 @@ export class WebRTCService {
    */
   isPeerConnected(peerId: string): boolean {
     const peer = this.peerConnections.get(peerId);
-    return peer?.connection.iceConnectionState === 'connected' &&
-           peer?.dataChannel?.readyState === 'open';
+    return (
+      peer?.connection.iceConnectionState === 'connected' &&
+      peer?.dataChannel?.readyState === 'open'
+    );
   }
 }

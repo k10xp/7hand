@@ -39,7 +39,7 @@ backend/
 
 ### Prerequisites
 
-- Node.js 16+ 
+- Node.js 16+
 - PostgreSQL 16+
 - npm or yarn
 
@@ -93,9 +93,11 @@ npm test -- --runInBand
 ### User Endpoints
 
 #### Create User
+
 `POST /api/user`
 
 **Request:**
+
 ```json
 {
   "username": "player123",
@@ -105,6 +107,7 @@ npm test -- --runInBand
 ```
 
 **Response:**
+
 ```json
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -121,18 +124,23 @@ npm test -- --runInBand
 ```
 
 #### Get User by ID
+
 `GET /api/user/:userId`
 
 #### Get User by Username
+
 `GET /api/user/username/:username`
 
 #### Get All Users
+
 `GET /api/users`
 
 #### Update User
+
 `PATCH /api/user/:userId`
 
 **Request:**
+
 ```json
 {
   "displayName": "New Name",
@@ -144,9 +152,11 @@ npm test -- --runInBand
 ```
 
 #### Delete User
+
 `DELETE /api/user/:userId`
 
 #### Update User Activity
+
 `POST /api/user/:userId/activity`
 
 For detailed user documentation, see [USER_DOCUMENTATION.md](./USER_DOCUMENTATION.md)
@@ -154,9 +164,11 @@ For detailed user documentation, see [USER_DOCUMENTATION.md](./USER_DOCUMENTATIO
 ### Lobby Endpoints
 
 #### Create Lobby
+
 `POST /api/lobby`
 
 **Request:**
+
 ```json
 {
   "userId": "550e8400-e29b-41d4-a716-446655440000"
@@ -164,6 +176,7 @@ For detailed user documentation, see [USER_DOCUMENTATION.md](./USER_DOCUMENTATIO
 ```
 
 **Response:**
+
 ```json
 {
   "lobbyId": "760e8500-e29b-41d4-a716-446655440001",
@@ -178,9 +191,11 @@ For detailed user documentation, see [USER_DOCUMENTATION.md](./USER_DOCUMENTATIO
 ```
 
 #### Join Lobby
+
 `POST /api/lobby/:lobbyId/join`
 
 **Request:**
+
 ```json
 {
   "userId": "550e8400-e29b-41d4-a716-446655440000"
@@ -188,17 +203,21 @@ For detailed user documentation, see [USER_DOCUMENTATION.md](./USER_DOCUMENTATIO
 ```
 
 #### Get Lobby
+
 `GET /api/lobby/:lobbyId`
 
 #### Delete Lobby
+
 `DELETE /api/lobby/:lobbyId`
 
 ### Health Endpoints
 
 #### Health Check
+
 `GET /health` or `GET /api/health`
 
 **Response:**
+
 ```json
 {
   "status": "ok",
@@ -277,6 +296,7 @@ npm run migrate-down
 ### Testing
 
 Tests are organized by type:
+
 - `*.test.js` - Unit tests (no database)
 - `*.db.test.js` - Database tests
 - `*.api.test.js` - API endpoint tests
@@ -284,14 +304,14 @@ Tests are organized by type:
 
 ## Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DB_HOST` | Database host | localhost |
-| `DB_PORT` | Database port | 5432 |
-| `DB_USER` | Database user | card-game |
-| `DB_PASSWORD` | Database password | changeme |
-| `DB_NAME` | Database name | card-game-db |
-| `NODE_ENV` | Environment | development |
+| Variable      | Description       | Default      |
+| ------------- | ----------------- | ------------ |
+| `DB_HOST`     | Database host     | localhost    |
+| `DB_PORT`     | Database port     | 5432         |
+| `DB_USER`     | Database user     | card-game    |
+| `DB_PASSWORD` | Database password | changeme     |
+| `DB_NAME`     | Database name     | card-game-db |
+| `NODE_ENV`    | Environment       | development  |
 
 ## Docker Support
 
@@ -316,11 +336,13 @@ docker-compose up backend
 ### Database Connection Issues
 
 Check PostgreSQL is running:
+
 ```bash
 psql -h localhost -U card-game -d card-game-db
 ```
 
 Verify environment variables:
+
 ```bash
 echo $DB_HOST $DB_PORT $DB_USER
 ```
@@ -328,6 +350,7 @@ echo $DB_HOST $DB_PORT $DB_USER
 ### Migration Issues
 
 Reset database (WARNING: destroys all data):
+
 ```bash
 npm run migrate-down
 npm run migrate

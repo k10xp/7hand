@@ -9,17 +9,17 @@ import { CookieService } from '../../services/cookie.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './user-profile.html',
-  styleUrls: ['./user-profile.css']
+  styleUrls: ['./user-profile.css'],
 })
 export class UserProfile implements OnInit {
   @Input() user: User | null = null;
   @Output() logout = new EventEmitter<void>();
-  
+
   preferences = {
     essential: true,
     analytics: false,
     advertising: false,
-    personalized: false
+    personalized: false,
   };
 
   constructor(private cookieService: CookieService) {}
@@ -50,7 +50,7 @@ export class UserProfile implements OnInit {
   savePreferences(): void {
     const consentData = {
       timestamp: new Date().toISOString(),
-      preferences: this.preferences
+      preferences: this.preferences,
     };
     localStorage.setItem('cookieConsent', JSON.stringify(consentData));
   }

@@ -2,7 +2,21 @@ import { Component, Input, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export type Suit = 'hearts' | 'diamonds' | 'clubs' | 'spades' | 'joker';
-export type Rank = 'A' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'J' | 'Q' | 'K' | 'JOKER';
+export type Rank =
+  | 'A'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+  | '7'
+  | '8'
+  | '9'
+  | '10'
+  | 'J'
+  | 'Q'
+  | 'K'
+  | 'JOKER';
 
 export interface Card {
   suit: Suit;
@@ -15,7 +29,7 @@ export interface Card {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './playing-card.component.html',
-  styleUrls: ['./playing-card.component.css']
+  styleUrls: ['./playing-card.component.css'],
 })
 export class PlayingCardComponent {
   @Input() suit: Suit = 'hearts';
@@ -39,13 +53,13 @@ export class PlayingCardComponent {
       diamonds: '♦',
       clubs: '♣',
       spades: '♠',
-      joker: '🃏'
+      joker: '🃏',
     };
     return symbols[this.suit];
   }
 
   get suitColor(): string {
-    return (this.suit === 'hearts' || this.suit === 'diamonds') ? 'red' : 'black';
+    return this.suit === 'hearts' || this.suit === 'diamonds' ? 'red' : 'black';
   }
 
   get displayRank(): string {
@@ -59,7 +73,7 @@ export class PlayingCardComponent {
   @HostListener('mousedown', ['$event'])
   onMouseDown(event: MouseEvent): void {
     if (!this.draggable) return;
-    
+
     event.preventDefault();
     this.isDragging = true;
     this.startX = event.clientX;
@@ -72,9 +86,9 @@ export class PlayingCardComponent {
     if (!this.isDragging || !this.draggable) return;
 
     const deltaX = event.clientX - this.startX;
-    
+
     // Rotate based on horizontal drag distance
-    this.rotation = this.startRotation + (deltaX / 2);
+    this.rotation = this.startRotation + deltaX / 2;
   }
 
   @HostListener('document:mouseup')
@@ -85,7 +99,7 @@ export class PlayingCardComponent {
   @HostListener('touchstart', ['$event'])
   onTouchStart(event: TouchEvent): void {
     if (!this.draggable) return;
-    
+
     event.preventDefault();
     this.isDragging = true;
     const touch = event.touches[0];
@@ -101,9 +115,9 @@ export class PlayingCardComponent {
     const touch = event.touches[0];
     const deltaX = touch.clientX - this.startX;
     const deltaY = touch.clientY - this.startY;
-    
+
     // Calculate rotation based on drag direction
-    this.rotation = this.startRotation + (deltaX / 2);
+    this.rotation = this.startRotation + deltaX / 2;
   }
 
   @HostListener('document:touchend')

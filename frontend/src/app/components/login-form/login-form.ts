@@ -8,12 +8,12 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-login-form',
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login-form.html',
-  styleUrls: ['./login-form.css']
+  styleUrls: ['./login-form.css'],
 })
 export class LoginForm {
   @Output() registerClick = new EventEmitter<void>();
   @Output() loginSuccess = new EventEmitter<void>();
-  
+
   loginForm: FormGroup;
   isLoading = false;
   errorMessage = '';
@@ -26,7 +26,7 @@ export class LoginForm {
   ) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
@@ -34,7 +34,7 @@ export class LoginForm {
     if (this.loginForm.valid) {
       this.isLoading = true;
       this.errorMessage = '';
-      
+
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
           this.isLoading = false;
@@ -49,7 +49,7 @@ export class LoginForm {
           this.isLoading = false;
           this.errorMessage = error.error?.error || 'Login failed. Please try again.';
           console.error('Login error:', error);
-        }
+        },
       });
     } else {
       this.markFormGroupTouched();
@@ -57,7 +57,7 @@ export class LoginForm {
   }
 
   private markFormGroupTouched(): void {
-    Object.keys(this.loginForm.controls).forEach(field => {
+    Object.keys(this.loginForm.controls).forEach((field) => {
       const control = this.loginForm.get(field);
       control?.markAsTouched({ onlySelf: true });
     });

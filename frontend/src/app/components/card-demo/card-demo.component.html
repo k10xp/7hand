@@ -22,20 +22,21 @@
         </select>
       </label>
       <label>
-        <input type="checkbox" [(ngModel)]="showFaceUp">
+        <input type="checkbox" [(ngModel)]="showFaceUp" />
         Face Up
       </label>
       <label>
-        <input type="checkbox" [(ngModel)]="isDraggable">
+        <input type="checkbox" [(ngModel)]="isDraggable" />
         Draggable
       </label>
     </div>
     <div class="single-card-demo">
-      <app-playing-card 
-        [suit]="selectedSuit" 
+      <app-playing-card
+        [suit]="selectedSuit"
         [rank]="selectedRank"
         [faceUp]="showFaceUp"
-        [draggable]="isDraggable">
+        [draggable]="isDraggable"
+      >
       </app-playing-card>
     </div>
   </div>
@@ -43,12 +44,13 @@
   <div class="all-cards-section">
     <h3>All 53 Card Types</h3>
     <div class="card-grid">
-      <app-playing-card 
-        *ngFor="let card of allCards" 
-        [suit]="card.suit" 
+      <app-playing-card
+        *ngFor="let card of allCards"
+        [suit]="card.suit"
         [rank]="card.rank"
         [faceUp]="true"
-        [draggable]="true">
+        [draggable]="true"
+      >
       </app-playing-card>
     </div>
   </div>

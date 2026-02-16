@@ -21,7 +21,7 @@ class User {
     this.stats = data.stats || {
       gamesPlayed: 0,
       gamesWon: 0,
-      gamesLost: 0
+      gamesLost: 0,
     };
   }
 
@@ -63,7 +63,7 @@ class User {
 
     return {
       valid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -117,7 +117,7 @@ class User {
       coins: this.coins,
       stats: this.stats,
       createdAt: this.createdAt,
-      lastActive: this.lastActive
+      lastActive: this.lastActive,
     };
   }
 }
@@ -135,7 +135,7 @@ class UserManager {
   createUser(userData) {
     const user = new User(userData);
     const validation = user.validate();
-    
+
     if (!validation.valid) {
       throw new Error(`User validation failed: ${validation.errors.join(', ')}`);
     }
@@ -209,12 +209,12 @@ class UserManager {
 async function saveUserToDb(user) {
   const pool = getPool();
   const now = new Date();
-  
+
   // Hash password if needed
   if (user.password) {
     await user.hashPassword();
   }
-  
+
   await pool.query(
     `INSERT INTO users (id, username, display_name, email, created_at, updated_at, last_active, coins, stats, password_hash)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
@@ -237,7 +237,7 @@ async function saveUserToDb(user) {
       user.lastActive || now,
       user.coins,
       JSON.stringify(user.stats),
-      user.passwordHash
+      user.passwordHash,
     ]
   );
 }
@@ -289,10 +289,10 @@ async function loadAllUsersFromDb() {
  */
 async function updateUserActivity(userId) {
   const pool = getPool();
-  await pool.query(
-    'UPDATE users SET last_active = $1, updated_at = $1 WHERE id = $2',
-    [new Date(), userId]
-  );
+  await pool.query('UPDATE users SET last_active = $1, updated_at = $1 WHERE id = $2', [
+    new Date(),
+    userId,
+  ]);
 }
 
 module.exports = {
@@ -303,5 +303,5 @@ module.exports = {
   loadUserFromDb,
   loadUserByUsernameFromDb,
   loadAllUsersFromDb,
-  updateUserActivity
+  updateUserActivity,
 };

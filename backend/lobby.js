@@ -12,13 +12,13 @@ class Lobby {
   }
 
   addUser(user) {
-    if (!this.users.find(u => u.id === user.id)) {
+    if (!this.users.find((u) => u.id === user.id)) {
       this.users.push(user);
     }
   }
 
   removeUser(userId) {
-    this.users = this.users.filter(u => u.id !== userId);
+    this.users = this.users.filter((u) => u.id !== userId);
   }
 }
 
@@ -61,7 +61,7 @@ async function saveLobbyToDb(lobby) {
       lobby.createdAt || now,
       now,
       lobby.lastActivity || now,
-      lobby.started || false
+      lobby.started || false,
     ]
   );
 }

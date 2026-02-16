@@ -44,9 +44,9 @@ function createTestServer() {
 
 async function testBrowser(browserName, frontendUrl) {
   console.log(`\n=== Testing ${browserName.toUpperCase()} browser ===`);
-  
+
   let builder = new Builder();
-  
+
   // Configure browser-specific options for CI environment
   if (browserName === 'chrome') {
     const chromeOptions = new chrome.Options();
@@ -65,14 +65,12 @@ async function testBrowser(browserName, frontendUrl) {
       '--disable-features=TranslateUI,BlinkGenPropertyTrees,VizDisplayCompositor',
       '--disable-component-update',
       '--disable-domain-reliability',
-      '--disable-client-side-phishing-detection'
+      '--disable-client-side-phishing-detection',
     ]);
     builder = builder.forBrowser('chrome').setChromeOptions(chromeOptions);
   } else if (browserName === 'firefox') {
     const firefoxOptions = new firefox.Options();
-    firefoxOptions.addArguments([
-      '--no-remote'
-    ]);
+    firefoxOptions.addArguments(['--no-remote']);
     // Disable various Firefox features that try to connect externally
     firefoxOptions.setPreference('network.dns.disableIPv6', true);
     firefoxOptions.setPreference('network.prefetch-next', false);
@@ -91,33 +89,34 @@ async function testBrowser(browserName, frontendUrl) {
   } else {
     builder = builder.forBrowser(browserName);
   }
-  
+
   let driver = await builder.usingServer(seleniumRemoteUrl).build();
-    
+
   try {
     console.log(`Navigating to ${frontendUrl} with ${browserName}`);
     await driver.get(frontendUrl);
-    
+
     // Wait for the page to load
     await driver.wait(until.elementLocated(By.css('body')), 10000);
-    
+
     // Get and verify the title
     const title = await driver.getTitle();
     console.log(`✓ Page title in ${browserName}: "${title}"`);
-    
+
     // Check for the page heading
     const heading = await driver.findElement(By.css('h1')).getText();
     console.log(`✓ Page heading in ${browserName}: "${heading}"`);
-    
+
     // Basic assertion - check if title contains expected content
     if (title.includes('7-hand')) {
       console.log(`✓ SUCCESS: Title verification passed for ${browserName}`);
       return true;
     } else {
-      console.log(`✗ FAILURE: Expected title to contain "7-hand", but got "${title}" in ${browserName}`);
+      console.log(
+        `✗ FAILURE: Expected title to contain "7-hand", but got "${title}" in ${browserName}`
+      );
       return false;
     }
-    
   } catch (error) {
     console.log(`✗ ERROR testing ${browserName}: ${error.message}`);
     return false;
@@ -129,16 +128,16 @@ async function testBrowser(browserName, frontendUrl) {
 (async function runAllTests() {
   console.log('Starting cross-browser title tests...');
   console.log(`Selenium Grid URL: ${seleniumRemoteUrl}`);
-  
+
   // Start test server
   const { server, port } = await createTestServer();
   // Use the container name that other containers can reach
   const frontendUrl = `http://selenium-tests:${port}`;
   console.log(`Frontend URL: ${frontendUrl}`);
-  
+
   let allTestsPassed = true;
   const testResults = {};
-  
+
   try {
     for (const browser of browsers) {
       try {
@@ -153,13 +152,13 @@ async function testBrowser(browserName, frontendUrl) {
         allTestsPassed = false;
       }
     }
-    
+
     console.log('\n=== Test Summary ===');
     console.log('Browser test results:');
     for (const [browser, passed] of Object.entries(testResults)) {
       console.log(`  ${browser}: ${passed ? '✓ PASSED' : '✗ FAILED'}`);
     }
-    
+
     if (allTestsPassed) {
       console.log('✓ All browser tests passed successfully!');
     } else {
@@ -170,6 +169,6 @@ async function testBrowser(browserName, frontendUrl) {
     server.close();
     console.log('Test server stopped');
   }
-  
+
   process.exit(allTestsPassed ? 0 : 1);
 })();

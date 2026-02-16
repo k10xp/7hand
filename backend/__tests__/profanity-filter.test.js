@@ -1,10 +1,10 @@
 // profanity-filter.test.js - Tests for profanity filtering
 
-const { 
-  normalizeText, 
-  containsProfanity, 
-  validateUsername, 
-  validateDisplayName 
+const {
+  normalizeText,
+  containsProfanity,
+  validateUsername,
+  validateDisplayName,
 } = require('../profanity-filter');
 
 describe('Profanity Filter', () => {

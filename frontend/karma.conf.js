@@ -7,34 +7,30 @@ module.exports = function (config) {
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
-      require('karma-coverage')
+      require('karma-coverage'),
     ],
     client: {
       jasmine: {
         // you can add configuration options for Jasmine here
         // the possible options are listed at https://jasmine.github.io/api/edge/Configuration.html
       },
-      clearContext: false // leave Jasmine Spec Runner output visible in browser
+      clearContext: false, // leave Jasmine Spec Runner output visible in browser
     },
     jasmineHtmlReporter: {
-      suppressAll: true // removes the duplicated traces
+      suppressAll: true, // removes the duplicated traces
     },
     coverageReporter: {
       dir: require('path').join(__dirname, './coverage/'),
       subdir: '.',
-      reporters: [
-        { type: 'html' },
-        { type: 'text-summary' },
-        { type: 'lcovonly' }
-      ],
+      reporters: [{ type: 'html' }, { type: 'text-summary' }, { type: 'lcovonly' }],
       check: {
         global: {
           statements: 80,
           branches: 50,
           functions: 50,
-          lines: 80
-        }
-      }
+          lines: 80,
+        },
+      },
     },
     reporters: ['progress', 'kjhtml'],
     browsers: ['Chrome'],
@@ -60,10 +56,10 @@ module.exports = function (config) {
           '--disable-features=TranslateUI,BlinkGenPropertyTrees,VizDisplayCompositor',
           '--disable-component-update',
           '--disable-domain-reliability',
-          '--disable-client-side-phishing-detection'
-        ]
-      }
+          '--disable-client-side-phishing-detection',
+        ],
+      },
     },
-    restartOnFileChange: true
+    restartOnFileChange: true,
   });
 };

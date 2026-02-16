@@ -48,6 +48,7 @@ CREATE INDEX users_last_active_index ON users (last_active);
 ## Validation Rules
 
 ### Username
+
 - **Required**: Yes
 - **Type**: String
 - **Length**: 3-20 characters
@@ -55,16 +56,19 @@ CREATE INDEX users_last_active_index ON users (last_active);
 - **Unique**: Yes
 
 ### Display Name
+
 - **Required**: No (defaults to username if not provided)
 - **Type**: String
 - **Length**: Maximum 30 characters
 
 ### Email
+
 - **Required**: No
 - **Type**: String or null
 - **Format**: Valid email format (RFC 5322 compliant)
 
 ### Stats
+
 - **Required**: Yes (auto-initialized if not provided)
 - **Type**: Object
 - **Properties**:
@@ -81,6 +85,7 @@ CREATE INDEX users_last_active_index ON users (last_active);
 Creates a new user account.
 
 **Request Body:**
+
 ```json
 {
   "username": "player123",
@@ -90,6 +95,7 @@ Creates a new user account.
 ```
 
 **Success Response (200):**
+
 ```json
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -106,6 +112,7 @@ Creates a new user account.
 ```
 
 **Error Response (400):**
+
 ```json
 {
   "error": "User validation failed: Username must be between 3 and 20 characters"
@@ -119,6 +126,7 @@ Creates a new user account.
 Retrieves user information by user ID.
 
 **Success Response (200):**
+
 ```json
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -135,6 +143,7 @@ Retrieves user information by user ID.
 ```
 
 **Error Response (404):**
+
 ```json
 {
   "error": "User not found"
@@ -151,6 +160,7 @@ Retrieves user information by username.
 Same as Get User by ID
 
 **Error Response (404):**
+
 ```json
 {
   "error": "User not found"
@@ -164,6 +174,7 @@ Same as Get User by ID
 Retrieves all users, ordered by creation date (newest first).
 
 **Success Response (200):**
+
 ```json
 [
   {
@@ -185,6 +196,7 @@ Retrieves all users, ordered by creation date (newest first).
 Updates user information. Username cannot be changed.
 
 **Request Body:**
+
 ```json
 {
   "displayName": "New Display Name",
@@ -197,6 +209,7 @@ Updates user information. Username cannot be changed.
 ```
 
 **Success Response (200):**
+
 ```json
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -213,6 +226,7 @@ Updates user information. Username cannot be changed.
 ```
 
 **Error Responses:**
+
 - **404**: User not found
 - **400**: Validation failed
 
@@ -223,6 +237,7 @@ Updates user information. Username cannot be changed.
 Updates the user's last activity timestamp.
 
 **Success Response (200):**
+
 ```json
 {
   "success": true
@@ -230,6 +245,7 @@ Updates the user's last activity timestamp.
 ```
 
 **Error Response (404):**
+
 ```json
 {
   "error": "User not found"
@@ -243,6 +259,7 @@ Updates the user's last activity timestamp.
 Deletes a user account.
 
 **Success Response (200):**
+
 ```json
 {
   "success": true
@@ -263,7 +280,7 @@ const userManager = new UserManager();
 const user = userManager.createUser({
   username: 'player123',
   displayName: 'Player 123',
-  email: 'player@example.com'
+  email: 'player@example.com',
 });
 
 // The user is automatically validated
@@ -276,7 +293,7 @@ console.log(user.stats); // { gamesPlayed: 0, gamesWon: 0, gamesLost: 0 }
 ```javascript
 const user = new User({
   username: 'player123',
-  displayName: 'Player 123'
+  displayName: 'Player 123',
 });
 
 const validation = user.validate();
@@ -293,7 +310,7 @@ if (!validation.valid) {
 // Update stats after a game
 user.updateStats({
   gamesPlayed: user.stats.gamesPlayed + 1,
-  gamesWon: user.stats.gamesWon + 1
+  gamesWon: user.stats.gamesWon + 1,
 });
 ```
 
@@ -360,11 +377,13 @@ This will create the `users` table with all necessary indexes and constraints.
 ## Testing
 
 Comprehensive tests are available in:
+
 - `__tests__/user.test.js` - Unit tests for User class and UserManager
 - `__tests__/user.db.test.js` - Database operations tests
 - `__tests__/user.api.test.js` - API endpoint tests
 
 Run tests with:
+
 ```bash
 npm test
 ```

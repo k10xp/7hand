@@ -11,9 +11,8 @@ describe('Logo', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Logo]
-    })
-    .compileComponents();
+      imports: [Logo],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Logo);
     component = fixture.componentInstance;
@@ -49,7 +48,7 @@ describe('Logo', () => {
 
   it('should contain game title text', () => {
     const textElements = debugElement.queryAll(By.css('text'));
-    const textContent = textElements.map(el => el.nativeElement.textContent).join(' ');
+    const textContent = textElements.map((el) => el.nativeElement.textContent).join(' ');
     expect(textContent).toContain('Seven Hand');
     expect(textContent).toContain('Card Game');
   });

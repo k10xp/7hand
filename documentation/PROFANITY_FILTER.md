@@ -67,6 +67,7 @@ normalizeText("CaFÉ-WoRlD___123") → "cafeworld123"
 ```
 
 Normalization steps:
+
 1. **Lowercase** - `HELLO` → `hello`
 2. **Strip diacritics** - `café` → `cafe`
 3. **Collapse repeated chars** - `fuuuuck` → `fuuck` (3+ → 2)
@@ -77,28 +78,32 @@ Normalization steps:
 Two complementary approaches:
 
 **Exact Match (after normalization)**
+
 ```javascript
-containsProfanity("n___i___g___g___e___r") // true
-containsProfanity("NIIIIGGER") // true
-containsProfanity("nîggér") // true
+containsProfanity('n___i___g___g___e___r'); // true
+containsProfanity('NIIIIGGER'); // true
+containsProfanity('nîggér'); // true
 ```
 
 **Regex Patterns (1337 speak)**
+
 ```javascript
-containsProfanity("n1gg3r") // true
-containsProfanity("f4gg0t") // true
-containsProfanity("r3t4rd") // true
+containsProfanity('n1gg3r'); // true
+containsProfanity('f4gg0t'); // true
+containsProfanity('r3t4rd'); // true
 ```
 
 ### 3. Validation Flow
 
 **Frontend:**
+
 1. User types username
 2. On blur/change, validate against loaded rules
 3. Show generic error if inappropriate
 4. Prevent form submission if invalid
 
 **Backend:**
+
 1. Receive user creation request
 2. Run User.validate() which includes profanity check
 3. Return 400 error with generic message if inappropriate
@@ -111,6 +116,7 @@ containsProfanity("r3t4rd") // true
 Returns the slur list and obfuscation patterns for client-side validation.
 
 **Response:**
+
 ```json
 {
   "slurList": ["slur1", "slur2", ...],
@@ -119,10 +125,10 @@ Returns the slur list and obfuscation patterns for client-side validation.
 ```
 
 **Usage:**
+
 ```typescript
 // Frontend loads rules on initialization
-this.http.get('/api/config/profanity-rules')
-  .subscribe(rules => this.applyRules(rules));
+this.http.get('/api/config/profanity-rules').subscribe((rules) => this.applyRules(rules));
 ```
 
 ## Example Usage
@@ -200,6 +206,7 @@ To add or modify prohibited terms:
 5. Frontend will automatically fetch updated rules on next load
 
 **Example:**
+
 ```javascript
 // backend/slur-list.js
 const SLUR_LIST = [
@@ -250,6 +257,7 @@ This implementation helps meet content moderation requirements for:
 ## Support
 
 For questions or issues:
+
 - Review test files for examples
 - Check implementation in `backend/profanity-filter.js`
 - See frontend integration in `registration-form.ts`

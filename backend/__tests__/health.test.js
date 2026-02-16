@@ -4,7 +4,11 @@ describe('getHealthStatus', () => {
   it('should return api up and db down if db throws', async () => {
     const logger = { error: jest.fn() };
     jest.resetModules();
-    jest.doMock('../db', () => ({ getPool: () => { throw new Error('fail'); } }));
+    jest.doMock('../db', () => ({
+      getPool: () => {
+        throw new Error('fail');
+      },
+    }));
     const { getHealthStatus } = require('../health');
     const status = await getHealthStatus(logger);
     expect(status.api).toBe('up');
@@ -14,7 +18,9 @@ describe('getHealthStatus', () => {
 
   it('should return db up and correct version if db works', async () => {
     const logger = { error: jest.fn() };
-    const fakePool = { query: jest.fn().mockResolvedValue({ rows: [{ version: 'PostgreSQL 16' }] }) };
+    const fakePool = {
+      query: jest.fn().mockResolvedValue({ rows: [{ version: 'PostgreSQL 16' }] }),
+    };
     jest.resetModules();
     jest.doMock('../db', () => ({ getPool: () => fakePool }));
     const { getHealthStatus } = require('../health');
@@ -25,7 +31,9 @@ describe('getHealthStatus', () => {
   });
 
   it('should handle missing logger gracefully', async () => {
-    const fakePool = { query: jest.fn().mockResolvedValue({ rows: [{ version: 'PostgreSQL 16' }] }) };
+    const fakePool = {
+      query: jest.fn().mockResolvedValue({ rows: [{ version: 'PostgreSQL 16' }] }),
+    };
     jest.resetModules();
     jest.doMock('../db', () => ({ getPool: () => fakePool }));
     const { getHealthStatus } = require('../health');

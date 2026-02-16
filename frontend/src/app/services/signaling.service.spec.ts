@@ -11,7 +11,7 @@ describe('SignalingService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [SignalingService, WebRTCService]
+      providers: [SignalingService, WebRTCService],
     });
     service = TestBed.inject(SignalingService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -31,7 +31,7 @@ describe('SignalingService', () => {
     const lobbyId = 'test-lobby';
     const userId = 'test-user';
 
-    service.notifyJoined(lobbyId, userId).subscribe(response => {
+    service.notifyJoined(lobbyId, userId).subscribe((response) => {
       expect(response).toBeTruthy();
     });
 
@@ -45,7 +45,7 @@ describe('SignalingService', () => {
     const lobbyId = 'test-lobby';
     const userId = 'test-user';
 
-    service.notifyLeft(lobbyId, userId).subscribe(response => {
+    service.notifyLeft(lobbyId, userId).subscribe((response) => {
       expect(response).toBeTruthy();
     });
 
@@ -60,7 +60,7 @@ describe('SignalingService', () => {
       expect(peerId).toBeTruthy();
       done();
     });
-    
+
     // Manually trigger for testing
     service.peerJoined$.next('test-peer');
   });
@@ -70,7 +70,7 @@ describe('SignalingService', () => {
       expect(peerId).toBeTruthy();
       done();
     });
-    
+
     // Manually trigger for testing
     service.peerLeft$.next('test-peer');
   });
@@ -84,12 +84,12 @@ describe('SignalingService', () => {
   it('should initialize for lobby', async () => {
     const lobbyId = 'test-lobby';
     const userId = 'test-user';
-    
+
     // Should not throw
     await service.initializeForLobby(lobbyId, userId);
-    
+
     expect(true).toBe(true);
-    
+
     service.stopPolling();
   });
 });

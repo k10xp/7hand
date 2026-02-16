@@ -1,7 +1,7 @@
 <div class="login-form-container">
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
     <h2 class="login-title">Login to 7hand</h2>
-    
+
     <div class="form-group">
       <input
         type="text"
@@ -43,16 +43,9 @@
       </div>
     </div>
 
-    <div class="error-message general-error" *ngIf="errorMessage">
-      {{ errorMessage }}
-    </div>
+    <div class="error-message general-error" *ngIf="errorMessage">{{ errorMessage }}</div>
 
-    <button
-      type="submit"
-      class="login-button"
-      [disabled]="isLoading"
-      [class.loading]="isLoading"
-    >
+    <button type="submit" class="login-button" [disabled]="isLoading" [class.loading]="isLoading">
       <span *ngIf="!isLoading">Login</span>
       <span *ngIf="isLoading">Logging in...</span>
     </button>
@@ -60,7 +53,7 @@
     <div class="form-footer">
       <p class="demo-note">Demo credentials: any username (3+ chars) and password (6+ chars)</p>
       <p class="register-link">
-        Don't have an account? 
+        Don't have an account?
         <a href="#" (click)="onRegisterClick($event)" class="link">Register here</a>
       </p>
     </div>

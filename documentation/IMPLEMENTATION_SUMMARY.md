@@ -9,6 +9,7 @@ This document summarizes the implementation of the User object for the 7hand car
 ### 1. User Object Definition
 
 #### Backend (Node.js)
+
 **File**: `backend/user.js`
 
 ```javascript
@@ -29,6 +30,7 @@ This document summarizes the implementation of the User object for the 7hand car
 ```
 
 #### Go Server
+
 **File**: `server/models/models.go`
 
 ```go
@@ -47,6 +49,7 @@ type User struct {
 ### 2. Storage
 
 #### Database Schema
+
 **Migration**: `backend/migrations/002_create_users_table.js`
 
 ```sql
@@ -66,6 +69,7 @@ CREATE INDEX users_last_active_index ON users (last_active);
 ```
 
 #### Persistence Functions
+
 - `saveUserToDb(user)` - Save/update user in database
 - `loadUserFromDb(userId)` - Load user by ID
 - `loadUserByUsernameFromDb(username)` - Load user by username
@@ -76,7 +80,9 @@ CREATE INDEX users_last_active_index ON users (last_active);
 ### 3. Editing and Management
 
 #### UserManager Class
+
 In-memory cache and management:
+
 - `createUser(userData)` - Create and validate new user
 - `getUser(userId)` - Retrieve user by ID
 - `getUserByUsername(username)` - Retrieve user by username
@@ -84,6 +90,7 @@ In-memory cache and management:
 - `removeUser(userId)` - Remove user from cache
 
 #### User Methods
+
 - `validate()` - Validate user data
 - `updateActivity()` - Update last active timestamp
 - `updateStats(stats)` - Update game statistics
@@ -91,29 +98,32 @@ In-memory cache and management:
 
 ### 4. API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/user` | Create new user |
-| GET | `/api/user/:userId` | Get user by ID |
-| GET | `/api/user/username/:username` | Get user by username |
-| GET | `/api/users` | Get all users |
-| PATCH | `/api/user/:userId` | Update user |
-| DELETE | `/api/user/:userId` | Delete user |
-| POST | `/api/user/:userId/activity` | Update activity |
+| Method | Endpoint                       | Description          |
+| ------ | ------------------------------ | -------------------- |
+| POST   | `/api/user`                    | Create new user      |
+| GET    | `/api/user/:userId`            | Get user by ID       |
+| GET    | `/api/user/username/:username` | Get user by username |
+| GET    | `/api/users`                   | Get all users        |
+| PATCH  | `/api/user/:userId`            | Update user          |
+| DELETE | `/api/user/:userId`            | Delete user          |
+| POST   | `/api/user/:userId/activity`   | Update activity      |
 
 ### 5. Validation Rules
 
 #### Username
+
 - Required
 - 3-20 characters
 - Only letters, numbers, hyphens, underscores
 - Must be unique
 
 #### Display Name
+
 - Optional (defaults to username)
 - Maximum 30 characters
 
 #### Email
+
 - Optional
 - Valid email format (RFC 5322)
 - Not exposed in API responses
@@ -121,6 +131,7 @@ In-memory cache and management:
 ### 6. Integration with Game System
 
 #### Lobby Integration
+
 Updated lobby endpoints to work with User objects:
 
 ```javascript
@@ -138,6 +149,7 @@ POST /api/lobby/:lobbyId/join
 ```
 
 Benefits:
+
 - Automatic user validation
 - Activity tracking when creating/joining lobbies
 - User statistics integration
@@ -183,6 +195,7 @@ Benefits:
 ### 9. Documentation
 
 Created comprehensive documentation:
+
 1. **USER_DOCUMENTATION.md** - Complete user object guide
 2. **backend/README.md** - Backend API documentation
 3. **Inline comments** - JSDoc and code comments
@@ -197,6 +210,7 @@ Created comprehensive documentation:
 ## Files Created/Modified
 
 ### New Files
+
 - `backend/user.js` - User model and management
 - `backend/migrations/002_create_users_table.js` - Database migration
 - `backend/__tests__/user.test.js` - Unit tests
@@ -207,6 +221,7 @@ Created comprehensive documentation:
 - `backend/README.md` - Backend documentation
 
 ### Modified Files
+
 - `backend/index.js` - Added user endpoints and lobby integration
 - `server/models/models.go` - Added User struct
 - `server/models/models_test.go` - Added User tests
@@ -214,6 +229,7 @@ Created comprehensive documentation:
 ## Usage Examples
 
 ### Create and Save User
+
 ```javascript
 const { UserManager, saveUserToDb } = require('./user');
 
@@ -221,34 +237,37 @@ const userManager = new UserManager();
 const user = userManager.createUser({
   username: 'player123',
   displayName: 'Player 123',
-  email: 'player@example.com'
+  email: 'player@example.com',
 });
 
 await saveUserToDb(user);
 ```
 
 ### Get User and Update Stats
+
 ```javascript
 const user = userManager.getUser(userId);
 user.updateStats({
   gamesPlayed: user.stats.gamesPlayed + 1,
-  gamesWon: user.stats.gamesWon + 1
+  gamesWon: user.stats.gamesWon + 1,
 });
 await saveUserToDb(user);
 ```
 
 ### Create Lobby with User
+
 ```javascript
 const response = await fetch('/api/lobby', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ userId: user.id })
+  body: JSON.stringify({ userId: user.id }),
 });
 ```
 
 ## Next Steps / Future Enhancements
 
 Potential improvements identified:
+
 1. Authentication system with password hashing
 2. User roles and permissions
 3. Profile pictures/avatars
@@ -261,6 +280,7 @@ Potential improvements identified:
 ## Conclusion
 
 The User object system is now fully implemented with:
+
 - ✅ Clear definition and structure
 - ✅ Database persistence with migrations
 - ✅ Full CRUD operations

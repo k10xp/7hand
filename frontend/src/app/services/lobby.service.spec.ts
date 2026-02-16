@@ -9,7 +9,7 @@ describe('LobbyService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [LobbyService]
+      providers: [LobbyService],
     });
     service = TestBed.inject(LobbyService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -27,10 +27,10 @@ describe('LobbyService', () => {
     const userId = 'test-user';
     const mockLobby: Lobby = {
       lobbyId: 'test-lobby-123',
-      users: [{ id: userId, username: 'testuser', displayName: 'Test User' }]
+      users: [{ id: userId, username: 'testuser', displayName: 'Test User' }],
     };
 
-    service.createLobby(userId).subscribe(lobby => {
+    service.createLobby(userId).subscribe((lobby) => {
       expect(lobby).toEqual(mockLobby);
     });
 
@@ -47,11 +47,11 @@ describe('LobbyService', () => {
       lobbyId,
       users: [
         { id: 'host-user', username: 'host', displayName: 'Host' },
-        { id: userId, username: 'testuser', displayName: 'Test User' }
-      ]
+        { id: userId, username: 'testuser', displayName: 'Test User' },
+      ],
     };
 
-    service.joinLobby(lobbyId, userId).subscribe(lobby => {
+    service.joinLobby(lobbyId, userId).subscribe((lobby) => {
       expect(lobby).toEqual(mockLobby);
     });
 
@@ -65,10 +65,10 @@ describe('LobbyService', () => {
     const lobbyId = 'test-lobby-123';
     const mockLobby: Lobby = {
       lobbyId,
-      users: [{ id: 'host-user', username: 'host', displayName: 'Host' }]
+      users: [{ id: 'host-user', username: 'host', displayName: 'Host' }],
     };
 
-    service.getLobby(lobbyId).subscribe(lobby => {
+    service.getLobby(lobbyId).subscribe((lobby) => {
       expect(lobby).toEqual(mockLobby);
     });
 
@@ -81,7 +81,7 @@ describe('LobbyService', () => {
     const lobbyId = 'test-lobby-123';
     const userId = 'test-user';
 
-    service.leaveLobby(lobbyId, userId).subscribe(response => {
+    service.leaveLobby(lobbyId, userId).subscribe((response) => {
       expect(response.success).toBe(true);
     });
 
@@ -94,7 +94,7 @@ describe('LobbyService', () => {
   it('should delete lobby', () => {
     const lobbyId = 'test-lobby-123';
 
-    service.deleteLobby(lobbyId).subscribe(response => {
+    service.deleteLobby(lobbyId).subscribe((response) => {
       expect(response.success).toBe(true);
     });
 
@@ -106,10 +106,10 @@ describe('LobbyService', () => {
   it('should update game state', (done) => {
     const gameState: GameState = {
       players: [{ id: 'test-user', username: 'testuser', displayName: 'Test User' }],
-      currentTurn: 'test-user'
+      currentTurn: 'test-user',
     };
 
-    service.getGameState().subscribe(state => {
+    service.getGameState().subscribe((state) => {
       if (state) {
         expect(state).toEqual(gameState);
         done();
@@ -122,18 +122,18 @@ describe('LobbyService', () => {
   it('should add player to lobby', (done) => {
     const initialLobby: Lobby = {
       lobbyId: 'test-lobby',
-      users: [{ id: 'user1', username: 'user1', displayName: 'User 1' }]
+      users: [{ id: 'user1', username: 'user1', displayName: 'User 1' }],
     };
 
     const newPlayer: LobbyPlayer = {
       id: 'user2',
       username: 'user2',
-      displayName: 'User 2'
+      displayName: 'User 2',
     };
 
     service.updateLobby(initialLobby);
 
-    service.getCurrentLobby().subscribe(lobby => {
+    service.getCurrentLobby().subscribe((lobby) => {
       if (lobby && lobby.users.length === 2) {
         expect(lobby.users).toContain(newPlayer);
         done();
@@ -148,15 +148,15 @@ describe('LobbyService', () => {
       lobbyId: 'test-lobby',
       users: [
         { id: 'user1', username: 'user1', displayName: 'User 1' },
-        { id: 'user2', username: 'user2', displayName: 'User 2' }
-      ]
+        { id: 'user2', username: 'user2', displayName: 'User 2' },
+      ],
     };
 
     service.updateLobby(initialLobby);
 
-    service.getCurrentLobby().subscribe(lobby => {
+    service.getCurrentLobby().subscribe((lobby) => {
       if (lobby && lobby.users.length === 1) {
-        expect(lobby.users.find(u => u.id === 'user2')).toBeUndefined();
+        expect(lobby.users.find((u) => u.id === 'user2')).toBeUndefined();
         done();
       }
     });
@@ -167,13 +167,13 @@ describe('LobbyService', () => {
   it('should clear lobby', (done) => {
     const initialLobby: Lobby = {
       lobbyId: 'test-lobby',
-      users: [{ id: 'user1', username: 'user1', displayName: 'User 1' }]
+      users: [{ id: 'user1', username: 'user1', displayName: 'User 1' }],
     };
 
     service.updateLobby(initialLobby);
     service.clearLobby();
 
-    service.getCurrentLobby().subscribe(lobby => {
+    service.getCurrentLobby().subscribe((lobby) => {
       if (lobby === null) {
         expect(lobby).toBeNull();
         done();

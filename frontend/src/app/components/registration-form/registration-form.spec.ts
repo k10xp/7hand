@@ -21,8 +21,8 @@ describe('RegistrationForm', () => {
       providers: [
         { provide: UserService, useValue: mockUserService },
         { provide: Router, useValue: mockRouter },
-        provideRouter([])
-      ]
+        provideRouter([]),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegistrationForm);
@@ -77,7 +77,7 @@ describe('RegistrationForm', () => {
       coins: 0,
       stats: { gamesPlayed: 0, gamesWon: 0, gamesLost: 0 },
       createdAt: '2025-10-22T00:00:00.000Z',
-      lastActive: '2025-10-22T00:00:00.000Z'
+      lastActive: '2025-10-22T00:00:00.000Z',
     };
 
     mockUserService.registerUser.and.returnValue(of(mockUser));
@@ -85,29 +85,31 @@ describe('RegistrationForm', () => {
     component.registrationForm.patchValue({
       username: 'testuser',
       displayName: 'Test User',
-      email: 'test@example.com'
+      email: 'test@example.com',
     });
 
     component.onSubmit();
 
-    expect(mockUserService.registerUser).toHaveBeenCalledWith(jasmine.objectContaining({
-      username: 'testuser',
-      displayName: 'Test User',
-      email: 'test@example.com'
-    }));
+    expect(mockUserService.registerUser).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        username: 'testuser',
+        displayName: 'Test User',
+        email: 'test@example.com',
+      })
+    );
     expect(component.successMessage).toContain('Welcome');
   });
 
   it('should handle registration error', () => {
     const errorResponse = {
       status: 400,
-      error: { error: 'Invalid user data' }
+      error: { error: 'Invalid user data' },
     };
 
     mockUserService.registerUser.and.returnValue(throwError(() => errorResponse));
 
     component.registrationForm.patchValue({
-      username: 'testuser'
+      username: 'testuser',
     });
 
     component.onSubmit();
@@ -119,13 +121,13 @@ describe('RegistrationForm', () => {
   it('should handle duplicate username error', () => {
     const errorResponse = {
       status: 409,
-      error: { error: 'Username already exists' }
+      error: { error: 'Username already exists' },
     };
 
     mockUserService.registerUser.and.returnValue(throwError(() => errorResponse));
 
     component.registrationForm.patchValue({
-      username: 'existinguser'
+      username: 'existinguser',
     });
 
     component.onSubmit();
@@ -135,7 +137,7 @@ describe('RegistrationForm', () => {
 
   it('should not submit if form is invalid', () => {
     component.registrationForm.patchValue({
-      username: 'ab' // too short
+      username: 'ab', // too short
     });
 
     component.onSubmit();

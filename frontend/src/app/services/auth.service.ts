@@ -15,7 +15,7 @@ export interface LoginResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private readonly apiUrl = '/api/auth';
@@ -39,7 +39,7 @@ export class AuthService {
    */
   login(credentials: LoginCredentials): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
-      tap(response => {
+      tap((response) => {
         if (response.success && response.user) {
           this.setCurrentUser(response.user);
         }

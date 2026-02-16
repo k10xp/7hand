@@ -7,23 +7,27 @@ A self-contained Angular component that represents all 53 card types (52 standar
 ## Features
 
 ✅ **Complete Card Deck**
+
 - Supports all 4 suits: Hearts (♥), Diamonds (♦), Clubs (♣), Spades (♠)
 - Supports all 13 ranks: A, 2-10, J, Q, K
 - Includes Joker card (53rd card type)
 - Proper color coding (red for hearts/diamonds, black for clubs/spades)
 
 ✅ **Interactive Functionality**
+
 - **Drag to Rotate**: Click and drag horizontally to spin the card
 - **Double-Click to Flip**: Toggle between face up and face down
 - **Touch Support**: Full mobile device support with touch gestures
 - **Configurable**: Control draggable state and initial face direction
 
 ✅ **Responsive Design**
+
 - Adapts to different screen sizes
 - Mobile-optimized card sizes
 - Proper touch event handling
 
 ✅ **Comprehensive Testing**
+
 - 28 unit tests covering all functionality
 - Tests for all 53 card types
 - Mouse and touch interaction tests
@@ -53,72 +57,77 @@ import { PlayingCardComponent } from './components/playing-card/playing-card.com
 ```
 
 ```html
-<app-playing-card 
-  [suit]="'hearts'" 
-  [rank]="'A'"
-  [faceUp]="true"
-  [draggable]="true">
+<app-playing-card [suit]="'hearts'" [rank]="'A'" [faceUp]="true" [draggable]="true">
 </app-playing-card>
 ```
 
 ### Component Inputs
 
-| Input | Type | Default | Description |
-|-------|------|---------|-------------|
-| `suit` | `Suit` | `'hearts'` | Card suit: 'hearts', 'diamonds', 'clubs', 'spades', or 'joker' |
-| `rank` | `Rank` | `'A'` | Card rank: 'A', '2'-'10', 'J', 'Q', 'K', or 'JOKER' |
-| `faceUp` | `boolean` | `true` | Whether the card shows its face or back |
-| `draggable` | `boolean` | `true` | Whether the card can be rotated by dragging |
+| Input       | Type      | Default    | Description                                                    |
+| ----------- | --------- | ---------- | -------------------------------------------------------------- |
+| `suit`      | `Suit`    | `'hearts'` | Card suit: 'hearts', 'diamonds', 'clubs', 'spades', or 'joker' |
+| `rank`      | `Rank`    | `'A'`      | Card rank: 'A', '2'-'10', 'J', 'Q', 'K', or 'JOKER'            |
+| `faceUp`    | `boolean` | `true`     | Whether the card shows its face or back                        |
+| `draggable` | `boolean` | `true`     | Whether the card can be rotated by dragging                    |
 
 ### Types
 
 ```typescript
 export type Suit = 'hearts' | 'diamonds' | 'clubs' | 'spades' | 'joker';
-export type Rank = 'A' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'J' | 'Q' | 'K' | 'JOKER';
+export type Rank =
+  | 'A'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+  | '7'
+  | '8'
+  | '9'
+  | '10'
+  | 'J'
+  | 'Q'
+  | 'K'
+  | 'JOKER';
 ```
 
 ### Examples
 
 **Ace of Spades (face up, draggable)**
+
 ```html
-<app-playing-card 
-  [suit]="'spades'" 
-  [rank]="'A'"
-  [faceUp]="true"
-  [draggable]="true">
+<app-playing-card [suit]="'spades'" [rank]="'A'" [faceUp]="true" [draggable]="true">
 </app-playing-card>
 ```
 
 **King of Hearts (face down, not draggable)**
+
 ```html
-<app-playing-card 
-  [suit]="'hearts'" 
-  [rank]="'K'"
-  [faceUp]="false"
-  [draggable]="false">
+<app-playing-card [suit]="'hearts'" [rank]="'K'" [faceUp]="false" [draggable]="false">
 </app-playing-card>
 ```
 
 **Joker**
+
 ```html
-<app-playing-card 
-  [suit]="'joker'" 
-  [rank]="'JOKER'"
-  [faceUp]="true"
-  [draggable]="true">
+<app-playing-card [suit]="'joker'" [rank]="'JOKER'" [faceUp]="true" [draggable]="true">
 </app-playing-card>
 ```
 
 ## Interactive Features
 
 ### Double-Click to Flip
+
 Double-click any card to toggle between face up and face down states.
 
 ### Drag to Rotate
+
 Click and drag horizontally to rotate the card. The rotation is calculated based on the horizontal distance dragged.
 
 ### Touch Support
+
 Full support for touch events on mobile devices:
+
 - Touch and drag to rotate
 - Double-tap to flip (uses standard double-click event)
 
@@ -189,6 +198,7 @@ A demo component is included at `/card-demo` route that showcases:
 - Controls to change suit, rank, face direction, and draggable state
 
 To view the demo:
+
 1. Start the dev server: `npm start`
 2. Navigate to: `http://localhost:4200/card-demo`
 
@@ -206,8 +216,9 @@ Each rank has a specific layout pattern for the suit symbols:
 ### Rotation Algorithm
 
 The rotation is calculated based on horizontal drag distance:
+
 ```typescript
-this.rotation = this.startRotation + (deltaX / 2);
+this.rotation = this.startRotation + deltaX / 2;
 ```
 
 This provides intuitive control where dragging right rotates clockwise and dragging left rotates counter-clockwise.

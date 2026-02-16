@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-queue',
   imports: [],
   templateUrl: './queue.html',
-  styleUrls: ['./queue.css']
+  styleUrls: ['./queue.css'],
 })
-export class Queue {
-
-}
+export class Queue {}

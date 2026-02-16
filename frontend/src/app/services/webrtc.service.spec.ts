@@ -6,7 +6,7 @@ describe('WebRTCService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [WebRTCService]
+      providers: [WebRTCService],
     });
     service = TestBed.inject(WebRTCService);
   });
@@ -18,7 +18,7 @@ describe('WebRTCService', () => {
   it('should create peer connection', async () => {
     const peerId = 'test-peer-1';
     const peerConnection = await service.createPeerConnection(peerId, true);
-    
+
     expect(peerConnection).toBeTruthy();
     expect(peerConnection).toBeInstanceOf(RTCPeerConnection);
   });
@@ -26,7 +26,7 @@ describe('WebRTCService', () => {
   it('should create offer for peer', async () => {
     const peerId = 'test-peer-1';
     const offer = await service.createOffer(peerId);
-    
+
     expect(offer).toBeTruthy();
     expect(offer.type).toBe('offer');
     expect(offer.sdp).toBeTruthy();
@@ -40,9 +40,9 @@ describe('WebRTCService', () => {
   it('should close peer connection', async () => {
     const peerId = 'test-peer-1';
     await service.createPeerConnection(peerId, true);
-    
+
     service.closePeerConnection(peerId);
-    
+
     const connectedPeers = service.getConnectedPeers();
     expect(connectedPeers).not.toContain(peerId);
   });
@@ -50,9 +50,9 @@ describe('WebRTCService', () => {
   it('should close all connections', async () => {
     await service.createPeerConnection('peer-1', true);
     await service.createPeerConnection('peer-2', true);
-    
+
     service.closeAllConnections();
-    
+
     const connectedPeers = service.getConnectedPeers();
     expect(connectedPeers.length).toBe(0);
   });
@@ -60,13 +60,13 @@ describe('WebRTCService', () => {
   it('should broadcast to all peers', async () => {
     const peerId1 = 'peer-1';
     const peerId2 = 'peer-2';
-    
+
     await service.createPeerConnection(peerId1, true);
     await service.createPeerConnection(peerId2, true);
-    
+
     // This should not throw
     service.broadcast('test', { message: 'hello' });
-    
+
     expect(true).toBe(true);
   });
 });

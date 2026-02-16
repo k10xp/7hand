@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-button-primary',
   imports: [],
   templateUrl: './button-primary.html',
-  styleUrls: ['./button-primary.css']
+  styleUrls: ['./button-primary.css'],
 })
-export class ButtonPrimary {
-
-}
+export class ButtonPrimary {}

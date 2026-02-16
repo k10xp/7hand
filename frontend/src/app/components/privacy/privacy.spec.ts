@@ -13,9 +13,8 @@ describe('Privacy', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Privacy],
-      providers: [provideRouter([])]
-    })
-    .compileComponents();
+      providers: [provideRouter([])],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Privacy);
     component = fixture.componentInstance;

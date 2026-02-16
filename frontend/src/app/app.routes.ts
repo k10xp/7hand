@@ -9,5 +9,5 @@ export const routes: Routes = [
   { path: 'privacy', component: Privacy },
   { path: 'lobby/:id', component: Lobby },
   { path: 'card-demo', component: CardDemo },
-  { path: '', pathMatch: 'full', redirectTo: 'register' }
+  { path: '', pathMatch: 'full', redirectTo: 'register' },
 ];

@@ -1,127 +1,125 @@
 .lobby-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5% 2.5%;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 1.5%;
-    backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5% 2.5%;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1.5%;
+  backdrop-filter: blur(10px);
 }
 
 .lobby-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5%;
 }
 
 .lobby-title {
-    font-size: clamp(1.25rem, 2.5vw, 2rem);
-    font-weight: 700;
-    color: #ffffff;
-    margin: 0;
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
 }
 
 .lobby-actions {
-    display: flex;
-    gap: 1%;
-    align-items: center;
-    padding: auto;
-    margin: auto;
+  display: flex;
+  gap: 1%;
+  align-items: center;
+  padding: auto;
+  margin: auto;
 }
 .lobby-user-coins {
-    margin-left:auto;
-    font-size: clamp(1rem, 2vw, 1.5rem);
-    font-weight: 600;
-    color: #ffffff;
+  margin-left: auto;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-weight: 600;
+  color: #ffffff;
 }
 /* Responsive - Tablet and below */
 @media (max-width: 811px) {
-    .lobby-header {
-        flex-direction: column;
-        gap: 2vh;
-        padding: 3% 4%;
-    }
+  .lobby-header {
+    flex-direction: column;
+    gap: 2vh;
+    padding: 3% 4%;
+  }
 
-    .lobby-info {
-        width: 100%;
-        text-align: center;
-    }
+  .lobby-info {
+    width: 100%;
+    text-align: center;
+  }
 
-    .lobby-actions {
-        width: 100%;
-        justify-content: center;
-    }
+  .lobby-actions {
+    width: 100%;
+    justify-content: center;
+  }
 
-    .btn-icon,
-    .btn-secondary,
-    .btn-danger {
-        padding: 2% 4%;
-    }
+  .btn-icon,
+  .btn-secondary,
+  .btn-danger {
+    padding: 2% 4%;
+  }
 
+  .seat {
+    width: 18%;
+  }
 
-    .seat {
-        width: 18%;
-    }
-
-      /* Card Table */
-.card-table {
+  /* Card Table */
+  .card-table {
     width: 100%;
     aspect-ratio: 1;
-}
+  }
 
-.table-surface {
+  .table-surface {
     position: relative;
-   width: 100%;
+    width: 100%;
     aspect-ratio: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-}
+  }
 }
 
 /* Responsive - Phone */
 @media (max-width: 480px) {
-    .lobby-header {
-        padding: 4% 5%;
-    }
+  .lobby-header {
+    padding: 4% 5%;
+  }
 
-    .lobby-actions {
-        flex-direction: column;
-    }
+  .lobby-actions {
+    flex-direction: column;
+  }
 
-    .btn-icon,
-    .btn-secondary,
-    .btn-danger {
-        width: 100%;
-        padding: 3% 5%;
-        justify-content: center;
-    }
+  .btn-icon,
+  .btn-secondary,
+  .btn-danger {
+    width: 100%;
+    padding: 3% 5%;
+    justify-content: center;
+  }
 
-    .seat {
-        width: 22%;
-    }
+  .seat {
+    width: 22%;
+  }
 
-    .lobby-footer {
-        padding: 4% 5%;
-    }
+  .lobby-footer {
+    padding: 4% 5%;
+  }
 
-    .game-info {
-        gap: 2vh;
-    }
+  .game-info {
+    gap: 2vh;
+  }
 
-    /* Card Table */
-.card-table {
+  /* Card Table */
+  .card-table {
     width: 100%;
     aspect-ratio: 1;
-}
+  }
 
-.table-surface {
+  .table-surface {
     position: relative;
-   width: 100%;
+    width: 100%;
     aspect-ratio: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
+  }
 }

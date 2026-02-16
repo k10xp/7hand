@@ -14,13 +14,13 @@ export interface SignalingMessage {
 const SIGNALING_POLL_INTERVAL_MS = 2000;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SignalingService {
   private lobbyId: string | null = null;
   private userId: string | null = null;
   private pollingInterval: any = null;
-  
+
   public peerJoined$ = new Subject<string>();
   public peerLeft$ = new Subject<string>();
 
@@ -35,7 +35,7 @@ export class SignalingService {
   async initializeForLobby(lobbyId: string, userId: string): Promise<void> {
     this.lobbyId = lobbyId;
     this.userId = userId;
-    
+
     // Start polling for signaling messages
     this.startPolling();
   }
@@ -122,7 +122,7 @@ export class SignalingService {
   async initiateConnectionToPeer(peerId: string): Promise<void> {
     try {
       const offer = await this.webrtcService.createOffer(peerId);
-      
+
       // Setup ICE candidate handler
       this.webrtcService.onIceCandidate(peerId, (candidate) => {
         if (candidate) {
@@ -142,7 +142,7 @@ export class SignalingService {
   private async handleOffer(fromPeer: string, offer: RTCSessionDescriptionInit): Promise<void> {
     try {
       const answer = await this.webrtcService.createAnswer(fromPeer, offer);
-      
+
       // Setup ICE candidate handler
       this.webrtcService.onIceCandidate(fromPeer, (candidate) => {
         if (candidate) {
@@ -170,7 +170,10 @@ export class SignalingService {
   /**
    * Handle incoming ICE candidate
    */
-  private async handleIceCandidate(fromPeer: string, candidate: RTCIceCandidateInit): Promise<void> {
+  private async handleIceCandidate(
+    fromPeer: string,
+    candidate: RTCIceCandidateInit
+  ): Promise<void> {
     try {
       await this.webrtcService.addIceCandidate(fromPeer, candidate);
     } catch (error) {
@@ -183,12 +186,12 @@ export class SignalingService {
    */
   private async sendOffer(toPeer: string, offer: RTCSessionDescriptionInit): Promise<void> {
     if (!this.lobbyId || !this.userId) return;
-    
+
     const message: SignalingMessage = {
       type: 'offer',
       from: this.userId,
       to: toPeer,
-      payload: offer
+      payload: offer,
     };
 
     await firstValueFrom(this.sendSignalingMessage(this.lobbyId, message));
@@ -199,12 +202,12 @@ export class SignalingService {
    */
   private async sendAnswer(toPeer: string, answer: RTCSessionDescriptionInit): Promise<void> {
     if (!this.lobbyId || !this.userId) return;
-    
+
     const message: SignalingMessage = {
       type: 'answer',
       from: this.userId,
       to: toPeer,
-      payload: answer
+      payload: answer,
     };
 
     await firstValueFrom(this.sendSignalingMessage(this.lobbyId, message));
@@ -215,12 +218,12 @@ export class SignalingService {
    */
   private async sendIceCandidate(toPeer: string, candidate: RTCIceCandidate): Promise<void> {
     if (!this.lobbyId || !this.userId) return;
-    
+
     const message: SignalingMessage = {
       type: 'ice-candidate',
       from: this.userId,
       to: toPeer,
-      payload: candidate.toJSON()
+      payload: candidate.toJSON(),
     };
 
     await firstValueFrom(this.sendSignalingMessage(this.lobbyId, message));

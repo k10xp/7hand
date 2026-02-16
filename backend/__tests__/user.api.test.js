@@ -26,14 +26,14 @@ app.post('/api/user', async (req, res) => {
 app.get('/api/user/:userId', async (req, res) => {
   const { userId } = req.params;
   const user = userManager.getUser(userId);
-  
+
   if (!user) {
     const dbUser = await loadUserFromDb(userId);
     if (!dbUser) {
       return res.status(404).json({ error: 'User not found' });
     }
   }
-  
+
   if (user) {
     res.json(user.toSafeObject());
   }
@@ -43,11 +43,11 @@ app.patch('/api/user/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     const user = userManager.updateUser(userId, req.body);
-    
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-    
+
     await saveUserToDb(user);
     res.json(user.toSafeObject());
   } catch (error) {
@@ -80,13 +80,11 @@ describe('User API Endpoints', () => {
 
   describe('POST /api/user', () => {
     it('should create a new user', async () => {
-      const response = await request(app)
-        .post('/api/user')
-        .send({
-          username: 'testuser',
-          displayName: 'Test User',
-          email: 'test@example.com'
-        });
+      const response = await request(app).post('/api/user').send({
+        username: 'testuser',
+        displayName: 'Test User',
+        email: 'test@example.com',
+      });
 
       expect(response.status).toBe(200);
       expect(response.body.username).toBe('testuser');
@@ -96,23 +94,19 @@ describe('User API Endpoints', () => {
     });
 
     it('should reject invalid username', async () => {
-      const response = await request(app)
-        .post('/api/user')
-        .send({
-          username: 'ab' // too short
-        });
+      const response = await request(app).post('/api/user').send({
+        username: 'ab', // too short
+      });
 
       expect(response.status).toBe(400);
       expect(response.body.error).toContain('validation failed');
     });
 
     it('should reject user with invalid email', async () => {
-      const response = await request(app)
-        .post('/api/user')
-        .send({
-          username: 'testuser',
-          email: 'invalid-email'
-        });
+      const response = await request(app).post('/api/user').send({
+        username: 'testuser',
+        email: 'invalid-email',
+      });
 
       expect(response.status).toBe(400);
       expect(response.body.error).toContain('validation failed');
@@ -121,14 +115,11 @@ describe('User API Endpoints', () => {
 
   describe('GET /api/user/:userId', () => {
     it('should get user by ID', async () => {
-      const createResponse = await request(app)
-        .post('/api/user')
-        .send({ username: 'testuser' });
+      const createResponse = await request(app).post('/api/user').send({ username: 'testuser' });
 
       const userId = createResponse.body.id;
 
-      const response = await request(app)
-        .get(`/api/user/${userId}`);
+      const response = await request(app).get(`/api/user/${userId}`);
 
       expect(response.status).toBe(200);
       expect(response.body.id).toBe(userId);
@@ -137,8 +128,7 @@ describe('User API Endpoints', () => {
 
     it('should return 404 for non-existent user', async () => {
       const { v4: uuidv4 } = require('uuid');
-      const response = await request(app)
-        .get(`/api/user/${uuidv4()}`);
+      const response = await request(app).get(`/api/user/${uuidv4()}`);
 
       expect(response.status).toBe(404);
       expect(response.body.error).toBe('User not found');
@@ -147,9 +137,7 @@ describe('User API Endpoints', () => {
 
   describe('PATCH /api/user/:userId', () => {
     it('should update user display name', async () => {
-      const createResponse = await request(app)
-        .post('/api/user')
-        .send({ username: 'testuser' });
+      const createResponse = await request(app).post('/api/user').send({ username: 'testuser' });
 
       const userId = createResponse.body.id;
 
@@ -163,9 +151,7 @@ describe('User API Endpoints', () => {
     });
 
     it('should update user stats', async () => {
-      const createResponse = await request(app)
-        .post('/api/user')
-        .send({ username: 'testuser' });
+      const createResponse = await request(app).post('/api/user').send({ username: 'testuser' });
 
       const userId = createResponse.body.id;
 
@@ -187,9 +173,7 @@ describe('User API Endpoints', () => {
     });
 
     it('should reject invalid updates', async () => {
-      const createResponse = await request(app)
-        .post('/api/user')
-        .send({ username: 'testuser' });
+      const createResponse = await request(app).post('/api/user').send({ username: 'testuser' });
 
       const userId = createResponse.body.id;
 
@@ -203,21 +187,17 @@ describe('User API Endpoints', () => {
 
   describe('DELETE /api/user/:userId', () => {
     it('should delete user', async () => {
-      const createResponse = await request(app)
-        .post('/api/user')
-        .send({ username: 'testuser' });
+      const createResponse = await request(app).post('/api/user').send({ username: 'testuser' });
 
       const userId = createResponse.body.id;
 
-      const response = await request(app)
-        .delete(`/api/user/${userId}`);
+      const response = await request(app).delete(`/api/user/${userId}`);
 
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
 
       // Verify user is deleted
-      const getResponse = await request(app)
-        .get(`/api/user/${userId}`);
+      const getResponse = await request(app).get(`/api/user/${userId}`);
 
       expect(getResponse.status).toBe(404);
     });

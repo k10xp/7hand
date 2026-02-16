@@ -10,10 +10,7 @@ describe('Registration', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Registration],
-      providers: [
-        provideRouter([]),
-        provideHttpClient()
-      ]
+      providers: [provideRouter([]), provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Registration);

@@ -22,11 +22,13 @@ This directory contains GitHub Actions workflows for the 7hand Card Game project
 Automatically builds and publishes Docker images to AWS ECR (Elastic Container Registry) when changes are pushed to the `main` branch.
 
 **Components Published:**
+
 - Frontend (Angular app)
 - Backend (Node.js/Express API)
 - Server (Go WebSocket server with GameLift integration)
 
 **Triggers:**
+
 - Push to `main` branch
 - Manual workflow dispatch
 
@@ -44,6 +46,7 @@ The workflow requires the following GitHub secrets to be configured:
 **ECR Repository Naming:**
 
 The workflow expects the following ECR repositories to exist in your AWS account:
+
 - `7hand-frontend` - For Angular frontend images
 - `7hand-backend` - For Node.js backend images
 - `7hand-server` - For Go server images
@@ -51,12 +54,14 @@ The workflow expects the following ECR repositories to exist in your AWS account
 **Image Tags:**
 
 Each build creates two tags:
+
 - `<git-sha>` - Specific commit SHA for versioning
 - `latest` - Always points to the most recent build
 
 **Setting up AWS Access:**
 
 1. Create ECR repositories in AWS:
+
    ```bash
    aws ecr create-repository --repository-name 7hand-frontend --region us-east-1
    aws ecr create-repository --repository-name 7hand-backend --region us-east-1
@@ -64,6 +69,7 @@ Each build creates two tags:
    ```
 
 2. Create an IAM role for GitHub Actions with ECR push permissions:
+
    ```json
    {
      "Version": "2012-10-17",
@@ -87,6 +93,7 @@ Each build creates two tags:
    ```
 
 3. Configure the role's trust relationship to allow GitHub OIDC:
+
    ```json
    {
      "Version": "2012-10-17",
@@ -118,6 +125,7 @@ Each build creates two tags:
 **Deployment:**
 
 After images are published to ECR, you can deploy them to:
+
 - Amazon ECS (Elastic Container Service)
 - Amazon EKS (Elastic Kubernetes Service)
 - AWS GameLift Anywhere (for the Go server component)
@@ -126,6 +134,7 @@ After images are published to ECR, you can deploy them to:
 **Image URIs:**
 
 After a successful build, image URIs will be in the format:
+
 ```
 <account-id>.dkr.ecr.<region>.amazonaws.com/7hand-frontend:<git-sha>
 <account-id>.dkr.ecr.<region>.amazonaws.com/7hand-backend:<git-sha>
@@ -141,19 +150,23 @@ These URIs are output as workflow notices and can be used in deployment configur
 Automatically deletes feature branches after their pull requests are merged, helping keep the repository clean and organized.
 
 **Triggers:**
+
 - Pull request closed events (only when merged)
 
 **Behavior:**
+
 - Deletes the source branch when a PR is successfully merged
 - Skips deletion for protected branches: `main`, `master`, `develop`, `staging`, `production`
 - Skips deletion for branches from forked repositories
 - Fails gracefully if branch deletion encounters an error
 
 **Permissions Required:**
+
 - `contents: write` - To delete branches
 - `pull-requests: read` - To read PR information
 
 **Why Use This:**
+
 - Automatically cleans up feature branches after merge
 - Reduces repository clutter
 - No manual cleanup needed for merged branches

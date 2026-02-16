@@ -10,9 +10,9 @@ import { UserProfile } from '../user-profile/user-profile';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ CommonModule, UserProfile, RulesDisplay, Modal],
+  imports: [CommonModule, UserProfile, RulesDisplay, Modal],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent {
   userCoins = 0;
@@ -22,19 +22,17 @@ export class HeaderComponent {
   currentUserId: string | null = null;
   currentUser: User | null = null;
 
-  constructor(
-    private router: Router
-  ) {}
+  constructor(private router: Router) {}
 
   openProfileModal(): void {
     this.showProfileModal = true;
   }
-  
+
   ngOnInit(): void {
     this.loadCurrentUser();
   }
 
- loadCurrentUser(): void {
+  loadCurrentUser(): void {
     const userJson = localStorage.getItem('currentUser');
     if (userJson) {
       this.currentUser = JSON.parse(userJson);

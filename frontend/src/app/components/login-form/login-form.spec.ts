@@ -14,9 +14,8 @@ describe('LoginForm', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LoginForm, ReactiveFormsModule],
-      providers: [provideRouter([])]
-    })
-    .compileComponents();
+      providers: [provideRouter([])],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LoginForm);
     component = fixture.componentInstance;
@@ -52,16 +51,16 @@ describe('LoginForm', () => {
 
   it('should validate username field', () => {
     const usernameControl = component.loginForm.get('username');
-    
+
     // Test required validation
     usernameControl?.setValue('');
     usernameControl?.markAsTouched();
     expect(usernameControl?.hasError('required')).toBeTruthy();
-    
+
     // Test minlength validation
     usernameControl?.setValue('ab');
     expect(usernameControl?.hasError('minlength')).toBeTruthy();
-    
+
     // Test valid input
     usernameControl?.setValue('validuser');
     expect(usernameControl?.valid).toBeTruthy();
@@ -69,16 +68,16 @@ describe('LoginForm', () => {
 
   it('should validate password field', () => {
     const passwordControl = component.loginForm.get('password');
-    
+
     // Test required validation
     passwordControl?.setValue('');
     passwordControl?.markAsTouched();
     expect(passwordControl?.hasError('required')).toBeTruthy();
-    
+
     // Test minlength validation
     passwordControl?.setValue('12345');
     expect(passwordControl?.hasError('minlength')).toBeTruthy();
-    
+
     // Test valid input
     passwordControl?.setValue('validpassword');
     expect(passwordControl?.valid).toBeTruthy();
@@ -87,41 +86,41 @@ describe('LoginForm', () => {
   it('should display error messages when fields are invalid and touched', () => {
     const usernameControl = component.loginForm.get('username');
     const passwordControl = component.loginForm.get('password');
-    
+
     usernameControl?.setValue('');
     passwordControl?.setValue('');
     usernameControl?.markAsTouched();
     passwordControl?.markAsTouched();
-    
+
     fixture.detectChanges();
-    
+
     const errorMessages = debugElement.queryAll(By.css('.error-message'));
     expect(errorMessages.length).toBeGreaterThan(0);
   });
 
   it('should submit form when valid', () => {
     spyOn(console, 'log');
-    
+
     component.loginForm.patchValue({
       username: 'testuser',
-      password: 'testpassword'
+      password: 'testpassword',
     });
-    
+
     component.onSubmit();
-    
+
     expect(component.isLoading).toBeTruthy();
   });
 
   it('should not submit form when invalid', () => {
     spyOn(component, 'markFormGroupTouched' as any);
-    
+
     component.loginForm.patchValue({
       username: '',
-      password: ''
+      password: '',
     });
-    
+
     component.onSubmit();
-    
+
     expect(component['markFormGroupTouched']).toHaveBeenCalled();
     expect(component.isLoading).toBeFalsy();
   });
@@ -129,7 +128,7 @@ describe('LoginForm', () => {
   it('should disable submit button when loading', () => {
     component.isLoading = true;
     fixture.detectChanges();
-    
+
     const submitButton = debugElement.query(By.css('button[type="submit"]'));
     expect(submitButton.nativeElement.disabled).toBeTruthy();
   });
@@ -137,7 +136,7 @@ describe('LoginForm', () => {
   it('should have proper input types', () => {
     const usernameInput = debugElement.query(By.css('input[formControlName="username"]'));
     const passwordInput = debugElement.query(By.css('input[formControlName="password"]'));
-    
+
     expect(usernameInput.nativeElement.type).toBe('text');
     expect(passwordInput.nativeElement.type).toBe('password');
   });

@@ -8,7 +8,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './cookie-consent.html',
-  styleUrl: './cookie-consent.css'
+  styleUrl: './cookie-consent.css',
 })
 export class CookieConsent implements OnInit {
   showBanner = false;
@@ -18,7 +18,7 @@ export class CookieConsent implements OnInit {
     essential: true, // Always true, cannot be disabled
     analytics: false,
     advertising: false,
-    personalized: false
+    personalized: false,
   };
 
   ngOnInit() {
@@ -33,7 +33,7 @@ export class CookieConsent implements OnInit {
       essential: true,
       analytics: true,
       advertising: true,
-      personalized: true
+      personalized: true,
     };
     this.saveConsent();
   }
@@ -43,7 +43,7 @@ export class CookieConsent implements OnInit {
       essential: true,
       analytics: false,
       advertising: false,
-      personalized: false
+      personalized: false,
     };
     this.saveConsent();
   }
@@ -63,12 +63,12 @@ export class CookieConsent implements OnInit {
   private saveConsent() {
     const consentData = {
       timestamp: new Date().toISOString(),
-      preferences: this.preferences
+      preferences: this.preferences,
     };
     localStorage.setItem('cookieConsent', JSON.stringify(consentData));
     this.showBanner = false;
     this.showSettings = false;
-    
+
     // Apply consent preferences
     this.applyConsent();
   }

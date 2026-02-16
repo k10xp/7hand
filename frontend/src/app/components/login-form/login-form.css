@@ -37,7 +37,9 @@
   border: 2px solid #ddd;
   border-radius: 8px;
   font-size: 16px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
   box-sizing: border-box;
 }
 
@@ -75,7 +77,6 @@
   outline-offset: 2px;
   border-radius: 4px;
 }
-
 
 .form-input:focus {
   outline: none;
@@ -177,7 +178,7 @@
   .login-form {
     padding: 30px 24px;
   }
-  
+
   .login-title {
     font-size: 24px;
   }

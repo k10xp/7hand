@@ -6,10 +6,10 @@ describe('User', () => {
       const userData = {
         username: 'testuser',
         displayName: 'Test User',
-        email: 'test@example.com'
+        email: 'test@example.com',
       };
       const user = new User(userData);
-      
+
       expect(user.id).toBeDefined();
       expect(user.username).toBe('testuser');
       expect(user.displayName).toBe('Test User');
@@ -19,7 +19,7 @@ describe('User', () => {
       expect(user.stats).toEqual({
         gamesPlayed: 0,
         gamesWon: 0,
-        gamesLost: 0
+        gamesLost: 0,
       });
     });
 
@@ -68,13 +68,15 @@ describe('User', () => {
       const user = new User({ username: 'user@name!' });
       const validation = user.validate();
       expect(validation.valid).toBe(false);
-      expect(validation.errors).toContain('Username can only contain letters, numbers, hyphens, and underscores');
+      expect(validation.errors).toContain(
+        'Username can only contain letters, numbers, hyphens, and underscores'
+      );
     });
 
     it('should reject display name that is too long', () => {
-      const user = new User({ 
+      const user = new User({
         username: 'testuser',
-        displayName: 'a'.repeat(31)
+        displayName: 'a'.repeat(31),
       });
       const validation = user.validate();
       expect(validation.valid).toBe(false);
@@ -82,9 +84,9 @@ describe('User', () => {
     });
 
     it('should reject invalid email format', () => {
-      const user = new User({ 
+      const user = new User({
         username: 'testuser',
-        email: 'invalid-email'
+        email: 'invalid-email',
       });
       const validation = user.validate();
       expect(validation.valid).toBe(false);
@@ -92,9 +94,9 @@ describe('User', () => {
     });
 
     it('should accept valid email', () => {
-      const user = new User({ 
+      const user = new User({
         username: 'testuser',
-        email: 'valid@example.com'
+        email: 'valid@example.com',
       });
       const validation = user.validate();
       expect(validation.valid).toBe(true);
@@ -111,11 +113,11 @@ describe('User', () => {
     it('should update lastActive timestamp', () => {
       const user = new User({ username: 'testuser' });
       const originalLastActive = user.lastActive;
-      
+
       // Wait a bit to ensure time difference
       jest.advanceTimersByTime(1000);
       user.updateActivity();
-      
+
       expect(user.lastActive.getTime()).toBeGreaterThanOrEqual(originalLastActive.getTime());
       expect(user.updatedAt.getTime()).toBeGreaterThanOrEqual(originalLastActive.getTime());
     });
@@ -125,7 +127,7 @@ describe('User', () => {
     it('should update user stats', () => {
       const user = new User({ username: 'testuser' });
       user.updateStats({ gamesPlayed: 5, gamesWon: 3 });
-      
+
       expect(user.stats.gamesPlayed).toBe(5);
       expect(user.stats.gamesWon).toBe(3);
       expect(user.stats.gamesLost).toBe(0);
@@ -135,7 +137,7 @@ describe('User', () => {
       const user = new User({ username: 'testuser' });
       user.updateStats({ gamesPlayed: 5 });
       user.updateStats({ gamesWon: 3 });
-      
+
       expect(user.stats.gamesPlayed).toBe(5);
       expect(user.stats.gamesWon).toBe(3);
       expect(user.stats.gamesLost).toBe(0);
@@ -147,11 +149,11 @@ describe('User', () => {
       const user = new User({
         username: 'testuser',
         displayName: 'Test User',
-        email: 'test@example.com'
+        email: 'test@example.com',
       });
-      
+
       const safeObject = user.toSafeObject();
-      
+
       expect(safeObject.id).toBeDefined();
       expect(safeObject.username).toBe('testuser');
       expect(safeObject.displayName).toBe('Test User');
@@ -174,7 +176,7 @@ describe('UserManager', () => {
   describe('createUser', () => {
     it('should create and store a new user', () => {
       const user = manager.createUser({ username: 'testuser' });
-      
+
       expect(user).toBeInstanceOf(User);
       expect(manager.getUser(user.id)).toBe(user);
     });
@@ -190,7 +192,7 @@ describe('UserManager', () => {
     it('should retrieve user by ID', () => {
       const user = manager.createUser({ username: 'testuser' });
       const retrieved = manager.getUser(user.id);
-      
+
       expect(retrieved).toBe(user);
     });
 
@@ -204,7 +206,7 @@ describe('UserManager', () => {
     it('should retrieve user by username', () => {
       const user = manager.createUser({ username: 'testuser' });
       const retrieved = manager.getUserByUsername('testuser');
-      
+
       expect(retrieved).toBe(user);
     });
 
@@ -218,7 +220,7 @@ describe('UserManager', () => {
     it('should update user display name', () => {
       const user = manager.createUser({ username: 'testuser' });
       const updated = manager.updateUser(user.id, { displayName: 'New Name' });
-      
+
       expect(updated.displayName).toBe('New Name');
       expect(updated.username).toBe('testuser');
     });
@@ -226,14 +228,14 @@ describe('UserManager', () => {
     it('should update user email', () => {
       const user = manager.createUser({ username: 'testuser' });
       const updated = manager.updateUser(user.id, { email: 'new@example.com' });
-      
+
       expect(updated.email).toBe('new@example.com');
     });
 
     it('should update user stats', () => {
       const user = manager.createUser({ username: 'testuser' });
       const updated = manager.updateUser(user.id, { stats: { gamesPlayed: 10 } });
-      
+
       expect(updated.stats.gamesPlayed).toBe(10);
     });
 
@@ -244,7 +246,7 @@ describe('UserManager', () => {
 
     it('should throw error for invalid updates', () => {
       const user = manager.createUser({ username: 'testuser' });
-      
+
       expect(() => {
         manager.updateUser(user.id, { displayName: 'a'.repeat(31) });
       }).toThrow('User validation failed');
@@ -253,7 +255,7 @@ describe('UserManager', () => {
     it('should not allow username updates', () => {
       const user = manager.createUser({ username: 'testuser' });
       manager.updateUser(user.id, { username: 'newusername' });
-      
+
       expect(user.username).toBe('testuser');
     });
   });
@@ -262,7 +264,7 @@ describe('UserManager', () => {
     it('should remove user from manager', () => {
       const user = manager.createUser({ username: 'testuser' });
       manager.removeUser(user.id);
-      
+
       expect(manager.getUser(user.id)).toBeUndefined();
     });
   });

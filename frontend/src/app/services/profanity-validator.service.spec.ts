@@ -10,18 +10,13 @@ describe('ProfanityValidatorService', () => {
 
   const mockRules = {
     slurList: ['nigger', 'faggot', 'retard', 'nazi'],
-    obfuscationPatterns: [
-      'n[i1!]gg[e3@]r',
-      'f[a4@]gg[o0]',
-      'r[e3@]t[a4@]rd',
-      'n[a4@]z[i1!]'
-    ]
+    obfuscationPatterns: ['n[i1!]gg[e3@]r', 'f[a4@]gg[o0]', 'r[e3@]t[a4@]rd', 'n[a4@]z[i1!]'],
   };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [ProfanityValidatorService]
+      providers: [ProfanityValidatorService],
     });
     service = TestBed.inject(ProfanityValidatorService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -40,7 +35,7 @@ describe('ProfanityValidatorService', () => {
   });
 
   it('should load rules from backend', (done) => {
-    service.getRules().subscribe(rules => {
+    service.getRules().subscribe((rules) => {
       expect(rules).toEqual(mockRules);
       done();
     });

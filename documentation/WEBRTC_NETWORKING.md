@@ -26,11 +26,13 @@ The application does **NOT** have TURN servers configured.
 ### STUN (Session Traversal Utilities for NAT)
 
 **What it does:**
+
 - Helps peers discover their public IP address
 - Enables NAT traversal for direct peer-to-peer connections
 - Required for WebRTC connections to work across different networks
 
 **When it works:**
+
 - Both peers have moderate NAT (most home routers)
 - At least one peer has a public IP or permissive firewall
 - Connection success varies by network environment (industry studies suggest ~80-85% success with STUN-only in typical conditions)
@@ -41,11 +43,13 @@ The application does **NOT** have TURN servers configured.
 ### TURN (Traversal Using Relays around NAT)
 
 **What it does:**
+
 - Acts as a relay server when direct peer-to-peer connections fail
 - Forwards traffic between peers who cannot connect directly
 - Fallback mechanism for restrictive NAT/firewall scenarios
 
 **When you need it:**
+
 - Both peers behind symmetric NAT or restrictive firewalls
 - Corporate networks, mobile carriers, or strict firewall policies
 - To maximize connection reliability across all network configurations
@@ -60,6 +64,7 @@ The answer depends on your deployment scenario:
 ### Current Setup: **Backend + Database Nodes**
 
 You currently need:
+
 1. **1+ Backend Server(s)** (Node.js/Express) - for signaling and API
 2. **1 Database Server** (PostgreSQL) - for user data and lobby state
 3. **Client Browsers** - where WebRTC P2P connections run
@@ -67,16 +72,19 @@ You currently need:
 ### Do You Need TURN Servers?
 
 **For Development/Testing:** ❌ **No**
+
 - Google's public STUN servers are sufficient
 - Most connections will work
 
 **For Small-Scale Production (<50 concurrent users):** ⚠️ **Optional**
+
 - Can use free TURN services like:
   - Xirsys (free tier: 500 MB/month)
   - Twilio STUN/TURN (pay-as-you-go)
 - Or accept varying connection reliability depending on user networks
 
 **For Production/Commercial Use:** ✅ **Yes, Recommended**
+
 - Critical for reliability and user experience
 - Required for users behind restrictive corporate firewalls
 - Significantly improves connection success rate across all network types
@@ -84,20 +92,23 @@ You currently need:
 ### Infrastructure Options
 
 #### Option 1: Public Services (Quick Start)
+
 ```javascript
 // No additional nodes needed - use existing infrastructure
 iceServers: [
-  { urls: 'stun:stun.l.google.com:19302' },          // STUN (free)
-  { urls: 'turn:YOUR_TURN_SERVER',                    // TURN (paid service)
+  { urls: 'stun:stun.l.google.com:19302' }, // STUN (free)
+  {
+    urls: 'turn:YOUR_TURN_SERVER', // TURN (paid service)
     username: 'user',
-    credential: 'pass'
-  }
-]
+    credential: 'pass',
+  },
+];
 ```
 
 **Cost:** $0-50/month depending on usage
 
 #### Option 2: Self-Hosted TURN Server (Cost-Effective at Scale)
+
 ```bash
 # Add 1 additional node running coturn
 docker run -d --network=host \
@@ -107,6 +118,7 @@ docker run -d --network=host \
 ```
 
 **Infrastructure:**
+
 - **1 Additional Server** (1 vCPU, 1GB RAM minimum)
 - Public IP address required
 - Open UDP ports: 3478, 49152-65535
@@ -114,6 +126,7 @@ docker run -d --network=host \
 **Cost:** ~$5-10/month for small VPS
 
 #### Option 3: Use Cloud TURN Services (Easiest)
+
 - **Twilio:** $0.0015/min per participant
 - **Xirsys:** Free tier available, then ~$50/month
 - **Metered.ca:** $0.50/GB
@@ -124,12 +137,12 @@ docker run -d --network=host \
 
 ### Server Requirements
 
-| Component | Ports | Protocol | Purpose |
-|-----------|-------|----------|---------|
-| Backend API | 3000 | HTTP | Signaling server |
-| Frontend | 4200/80 | HTTP | Web app delivery |
-| STUN (Google) | 19302 | UDP | NAT discovery (external) |
-| TURN (if added) | 3478, 49152-65535 | UDP/TCP | Relay traffic (your server) |
+| Component       | Ports             | Protocol | Purpose                     |
+| --------------- | ----------------- | -------- | --------------------------- |
+| Backend API     | 3000              | HTTP     | Signaling server            |
+| Frontend        | 4200/80           | HTTP     | Web app delivery            |
+| STUN (Google)   | 19302             | UDP      | NAT discovery (external)    |
+| TURN (if added) | 3478, 49152-65535 | UDP/TCP  | Relay traffic (your server) |
 
 ### Client Browser Requirements
 
@@ -141,11 +154,13 @@ docker run -d --network=host \
 ### Bandwidth Considerations
 
 **Per Game Session:**
+
 - Signaling (initial setup): ~5-10 KB
 - Game state updates: ~1-5 KB/s per peer
 - For 4-player game: ~3-15 KB/s per player
 
 **For 100 Concurrent Users (25 games):**
+
 - Signaling traffic: Negligible (<1 Mbps)
 - P2P traffic: Direct between peers (no server bandwidth)
 - TURN relay traffic (if used): 10-50 GB/month
@@ -170,6 +185,7 @@ docker run -d --network=host \
 ## Recommendations
 
 ### For Development
+
 ✅ Current setup is fine - no changes needed
 
 ### For Production Deployment
@@ -226,6 +242,7 @@ user=username:password
 ## Cost Analysis
 
 ### Small Scale (10 concurrent games, 40 users)
+
 - Backend: $5-10/month (1 VPS)
 - Database: $5-10/month (shared VPS or RDS free tier)
 - STUN: Free (Google)
@@ -233,6 +250,7 @@ user=username:password
 - **Total: $10-40/month**
 
 ### Medium Scale (100 concurrent games, 400 users)
+
 - Backend: $20-40/month (2-3 load-balanced VPS)
 - Database: $15-30/month (managed DB)
 - STUN: Free (Google)
@@ -242,17 +260,20 @@ user=username:password
 ## Troubleshooting
 
 ### Connections Failing
+
 1. Check browser console for ICE connection state
 2. Verify STUN servers are accessible (try from browser console)
 3. Test with different networks (home, mobile, corporate)
 4. Add TURN server if connections fail consistently
 
 ### High Server Load
+
 1. Current HTTP polling every 2s may cause load
 2. Consider switching to WebSocket for signaling
 3. Implement connection pooling and cleanup
 
 ### Firewall Issues
+
 1. Ensure UDP ports are not blocked
 2. Check corporate firewall policies
 3. Add TURN server with TCP transport as fallback
@@ -260,16 +281,19 @@ user=username:password
 ## Summary
 
 **Current State:**
+
 - ✅ STUN servers configured (Google public)
 - ❌ No TURN servers
 - ✅ Signaling server (HTTP polling)
 - ✅ Works for most connections in typical network environments
 
 **Node Requirements:**
+
 - **Minimum:** 1 backend + 1 database = **2 nodes**
 - **Recommended for production:** Add 1 TURN server = **3 nodes**
 
 **Bottom Line:**
+
 - Current setup works for development
 - For production reliability, add a TURN server
 - Can start with free/cheap cloud TURN services

@@ -1,11 +1,11 @@
-const { 
+const {
   User,
-  saveUserToDb, 
-  removeUserFromDb, 
+  saveUserToDb,
+  removeUserFromDb,
   loadUserFromDb,
   loadUserByUsernameFromDb,
   loadAllUsersFromDb,
-  updateUserActivity
+  updateUserActivity,
 } = require('../user');
 const { connect, disconnect, getPool } = require('../db');
 
@@ -29,7 +29,7 @@ describe('User Database Operations', () => {
       const user = new User({
         username: 'testuser',
         displayName: 'Test User',
-        email: 'test@example.com'
+        email: 'test@example.com',
       });
 
       await saveUserToDb(user);
@@ -44,11 +44,11 @@ describe('User Database Operations', () => {
     it('should update existing user on conflict', async () => {
       const user = new User({
         username: 'testuser',
-        displayName: 'Original Name'
+        displayName: 'Original Name',
       });
 
       await saveUserToDb(user);
-      
+
       user.displayName = 'Updated Name';
       await saveUserToDb(user);
 
@@ -58,7 +58,7 @@ describe('User Database Operations', () => {
 
     it('should save user stats as JSON', async () => {
       const user = new User({
-        username: 'testuser'
+        username: 'testuser',
       });
       user.updateStats({ gamesPlayed: 5, gamesWon: 3 });
 
@@ -68,7 +68,7 @@ describe('User Database Operations', () => {
       expect(dbUser.stats).toEqual({
         gamesPlayed: 5,
         gamesWon: 3,
-        gamesLost: 0
+        gamesLost: 0,
       });
     });
   });
@@ -77,7 +77,7 @@ describe('User Database Operations', () => {
     it('should load user from database', async () => {
       const user = new User({
         username: 'testuser',
-        email: 'test@example.com'
+        email: 'test@example.com',
       });
 
       await saveUserToDb(user);
@@ -99,7 +99,7 @@ describe('User Database Operations', () => {
     it('should load user by username', async () => {
       const user = new User({
         username: 'testuser',
-        email: 'test@example.com'
+        email: 'test@example.com',
       });
 
       await saveUserToDb(user);
@@ -121,7 +121,7 @@ describe('User Database Operations', () => {
       const user2 = new User({ id: uuidv4(), username: 'testuser' });
 
       await saveUserToDb(user1);
-      
+
       await expect(saveUserToDb(user2)).rejects.toThrow();
     });
   });
@@ -138,9 +138,9 @@ describe('User Database Operations', () => {
 
       const users = await loadAllUsersFromDb();
       expect(users.length).toBe(3);
-      expect(users.map(u => u.username)).toContain('user1');
-      expect(users.map(u => u.username)).toContain('user2');
-      expect(users.map(u => u.username)).toContain('user3');
+      expect(users.map((u) => u.username)).toContain('user1');
+      expect(users.map((u) => u.username)).toContain('user2');
+      expect(users.map((u) => u.username)).toContain('user3');
     });
 
     it('should return empty array when no users exist', async () => {
@@ -151,10 +151,10 @@ describe('User Database Operations', () => {
     it('should order users by created_at DESC', async () => {
       const user1 = new User({ username: 'user1' });
       await saveUserToDb(user1);
-      
+
       // Small delay to ensure different timestamps
-      await new Promise(resolve => setTimeout(resolve, 10));
-      
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
       const user2 = new User({ username: 'user2' });
       await saveUserToDb(user2);
 
@@ -189,7 +189,7 @@ describe('User Database Operations', () => {
       const originalLastActive = (await loadUserFromDb(user.id)).last_active;
 
       // Wait to ensure timestamp difference
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       await updateUserActivity(user.id);
 

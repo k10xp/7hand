@@ -65,6 +65,7 @@ SELENIUM_REMOTE_URL=http://localhost:4444/wd/hub npm run test:grid
 ## Expected Output
 
 Successful test run shows:
+
 ```
 Starting cross-browser title tests...
 Selenium Grid URL: http://selenium-hub:4444/wd/hub
@@ -84,6 +85,7 @@ Selenium Grid URL: http://selenium-hub:4444/wd/hub
 ## Configuration
 
 Environment variables:
+
 - `SELENIUM_REMOTE_URL` - Selenium Grid Hub URL (default: http://localhost:4444/wd/hub)
 - `FRONTEND_URL` - URL of the application to test (for integration with actual frontend)
 
@@ -92,6 +94,7 @@ Environment variables:
 For Continuous Integration environments, browsers are configured to run in offline mode to prevent external network calls:
 
 #### Chrome Configuration
+
 - `--no-sandbox` - Required for containerized environments
 - `--disable-dev-shm-usage` - Prevents /dev/shm exhaustion
 - `--disable-background-networking` - Prevents telemetry calls
@@ -103,6 +106,7 @@ For Continuous Integration environments, browsers are configured to run in offli
 - `--disable-client-side-phishing-detection` - Disables phishing detection service
 
 #### Firefox Configuration
+
 - `--no-remote` - Prevents external connections
 - Disabled preferences:
   - Safe browsing features
@@ -115,6 +119,7 @@ These configurations ensure browsers run reliably in CI environments without att
 ## Browser Support
 
 Currently supports:
+
 - ✅ Chrome
 - ✅ Firefox
 - 🔄 Additional browsers can be added by updating the `browsers` array in test files
@@ -122,6 +127,7 @@ Currently supports:
 ## Integration Notes
 
 This setup can be extended to test the actual 7hand frontend by:
+
 1. Ensuring the frontend service is running
 2. Updating the `FRONTEND_URL` environment variable
 3. Modifying test assertions as needed for the actual application

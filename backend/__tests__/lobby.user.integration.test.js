@@ -1,7 +1,13 @@
 const request = require('supertest');
 const express = require('express');
 const { LobbyManager, saveLobbyToDb, removeLobbyFromDb } = require('../lobby');
-const { UserManager, saveUserToDb, removeUserFromDb, loadUserFromDb, updateUserActivity } = require('../user');
+const {
+  UserManager,
+  saveUserToDb,
+  removeUserFromDb,
+  loadUserFromDb,
+  updateUserActivity,
+} = require('../user');
 const { connect, disconnect, getPool } = require('../db');
 const logger = require('../logger');
 
@@ -26,7 +32,7 @@ app.post('/api/user', async (req, res) => {
 app.post('/api/lobby', async (req, res) => {
   const { userId } = req.body;
   if (!userId) return res.status(400).json({ error: 'User ID required' });
-  
+
   let user = userManager.getUser(userId);
   if (!user) {
     const dbUser = await loadUserFromDb(userId);
@@ -42,13 +48,13 @@ app.post('/api/lobby', async (req, res) => {
       createdAt: dbUser.created_at,
       updatedAt: dbUser.updated_at,
       lastActive: dbUser.last_active,
-      stats: dbUser.stats
+      stats: dbUser.stats,
     });
   }
-  
+
   user.updateActivity();
   await updateUserActivity(userId);
-  
+
   const lobby = lobbyManager.createLobby(user.toSafeObject());
   await saveLobbyToDb(lobby);
   res.json({ lobbyId: lobby.id, users: lobby.users });
@@ -57,9 +63,9 @@ app.post('/api/lobby', async (req, res) => {
 app.post('/api/lobby/:lobbyId/join', async (req, res) => {
   const { userId } = req.body;
   const { lobbyId } = req.params;
-  
+
   if (!userId) return res.status(400).json({ error: 'User ID required' });
-  
+
   let user = userManager.getUser(userId);
   if (!user) {
     const dbUser = await loadUserFromDb(userId);
@@ -75,16 +81,16 @@ app.post('/api/lobby/:lobbyId/join', async (req, res) => {
       createdAt: dbUser.created_at,
       updatedAt: dbUser.updated_at,
       lastActive: dbUser.last_active,
-      stats: dbUser.stats
+      stats: dbUser.stats,
     });
   }
-  
+
   user.updateActivity();
   await updateUserActivity(userId);
-  
+
   const lobby = lobbyManager.getLobby(lobbyId);
   if (!lobby) return res.status(404).json({ error: 'Lobby not found' });
-  
+
   lobby.addUser(user.toSafeObject());
   await saveLobbyToDb(lobby);
   res.json({ lobbyId: lobby.id, users: lobby.users });
@@ -118,9 +124,7 @@ describe('Lobby and User Integration', () => {
       const userId = userResponse.body.id;
 
       // Create lobby with user ID
-      const lobbyResponse = await request(app)
-        .post('/api/lobby')
-        .send({ userId });
+      const lobbyResponse = await request(app).post('/api/lobby').send({ userId });
 
       expect(lobbyResponse.status).toBe(200);
       expect(lobbyResponse.body.lobbyId).toBeDefined();
@@ -130,9 +134,7 @@ describe('Lobby and User Integration', () => {
     });
 
     it('should reject lobby creation without user ID', async () => {
-      const response = await request(app)
-        .post('/api/lobby')
-        .send({});
+      const response = await request(app).post('/api/lobby').send({});
 
       expect(response.status).toBe(400);
       expect(response.body.error).toBe('User ID required');
@@ -140,9 +142,7 @@ describe('Lobby and User Integration', () => {
 
     it('should reject lobby creation with non-existent user', async () => {
       const { v4: uuidv4 } = require('uuid');
-      const response = await request(app)
-        .post('/api/lobby')
-        .send({ userId: uuidv4() });
+      const response = await request(app).post('/api/lobby').send({ userId: uuidv4() });
 
       expect(response.status).toBe(404);
       expect(response.body.error).toBe('User not found');
@@ -179,9 +179,7 @@ describe('Lobby and User Integration', () => {
 
     it('should reject join without user ID', async () => {
       const { v4: uuidv4 } = require('uuid');
-      const response = await request(app)
-        .post(`/api/lobby/${uuidv4()}/join`)
-        .send({});
+      const response = await request(app).post(`/api/lobby/${uuidv4()}/join`).send({});
 
       expect(response.status).toBe(400);
       expect(response.body.error).toBe('User ID required');
@@ -189,11 +187,9 @@ describe('Lobby and User Integration', () => {
 
     it('should reject join with non-existent user', async () => {
       const { v4: uuidv4 } = require('uuid');
-      
+
       // Create user and lobby first
-      const userResponse = await request(app)
-        .post('/api/user')
-        .send({ username: 'user1' });
+      const userResponse = await request(app).post('/api/user').send({ username: 'user1' });
 
       const lobbyResponse = await request(app)
         .post('/api/lobby')
@@ -210,10 +206,8 @@ describe('Lobby and User Integration', () => {
 
     it('should reject join to non-existent lobby', async () => {
       const { v4: uuidv4 } = require('uuid');
-      
-      const userResponse = await request(app)
-        .post('/api/user')
-        .send({ username: 'user1' });
+
+      const userResponse = await request(app).post('/api/user').send({ username: 'user1' });
 
       const response = await request(app)
         .post(`/api/lobby/${uuidv4()}/join`)
@@ -226,19 +220,15 @@ describe('Lobby and User Integration', () => {
 
   describe('User activity tracking through lobbies', () => {
     it('should update user activity when creating lobby', async () => {
-      const userResponse = await request(app)
-        .post('/api/user')
-        .send({ username: 'testuser' });
+      const userResponse = await request(app).post('/api/user').send({ username: 'testuser' });
 
       const userId = userResponse.body.id;
       const originalLastActive = userResponse.body.lastActive;
 
       // Wait a bit
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
-      await request(app)
-        .post('/api/lobby')
-        .send({ userId });
+      await request(app).post('/api/lobby').send({ userId });
 
       // Check user activity was updated
       const pool = getPool();

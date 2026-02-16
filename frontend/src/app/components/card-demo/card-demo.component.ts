@@ -8,21 +8,21 @@ import { PlayingCardComponent, Suit, Rank } from '../playing-card/playing-card.c
   standalone: true,
   imports: [CommonModule, FormsModule, PlayingCardComponent],
   templateUrl: './card-demo.component.html',
-  styleUrls: ['./card-demo.component.css']
+  styleUrls: ['./card-demo.component.css'],
 })
 export class CardDemo {
   suits: Suit[] = ['hearts', 'diamonds', 'clubs', 'spades'];
   ranks: Rank[] = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-  
+
   selectedSuit: Suit = 'hearts';
   selectedRank: Rank = 'A';
   showFaceUp: boolean = true;
   isDraggable: boolean = true;
 
   get allCards() {
-    const cards: Array<{suit: Suit, rank: Rank}> = [];
-    this.suits.forEach(suit => {
-      this.ranks.forEach(rank => {
+    const cards: Array<{ suit: Suit; rank: Rank }> = [];
+    this.suits.forEach((suit) => {
+      this.ranks.forEach((rank) => {
         cards.push({ suit, rank });
       });
     });

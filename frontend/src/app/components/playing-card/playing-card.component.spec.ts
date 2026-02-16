@@ -7,9 +7,8 @@ describe('PlayingCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PlayingCardComponent]
-    })
-    .compileComponents();
+      imports: [PlayingCardComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PlayingCardComponent);
     component = fixture.componentInstance;
@@ -62,7 +61,7 @@ describe('PlayingCardComponent', () => {
     it('should identify red suits correctly', () => {
       component.suit = 'hearts';
       expect(component.suitColor).toBe('red');
-      
+
       component.suit = 'diamonds';
       expect(component.suitColor).toBe('red');
     });
@@ -70,10 +69,10 @@ describe('PlayingCardComponent', () => {
     it('should identify black suits correctly', () => {
       component.suit = 'clubs';
       expect(component.suitColor).toBe('black');
-      
+
       component.suit = 'spades';
       expect(component.suitColor).toBe('black');
-      
+
       component.suit = 'joker';
       expect(component.suitColor).toBe('black');
     });
@@ -97,8 +96,8 @@ describe('PlayingCardComponent', () => {
 
     it('should support all 52 standard cards', () => {
       let cardCount = 0;
-      suits.forEach(suit => {
-        ranks.forEach(rank => {
+      suits.forEach((suit) => {
+        ranks.forEach((rank) => {
           component.suit = suit;
           component.rank = rank;
           expect(component.cardId).toBe(`${rank}-${suit}`);
@@ -148,9 +147,9 @@ describe('PlayingCardComponent', () => {
       component.draggable = false;
       const event = new MouseEvent('mousedown', { clientX: 100, clientY: 100 });
       spyOn(event, 'preventDefault');
-      
+
       component.onMouseDown(event);
-      
+
       expect(component.isDragging).toBe(false);
       expect(event.preventDefault).not.toHaveBeenCalled();
     });
@@ -159,9 +158,9 @@ describe('PlayingCardComponent', () => {
       component.draggable = true;
       const event = new MouseEvent('mousedown', { clientX: 100, clientY: 100 });
       spyOn(event, 'preventDefault');
-      
+
       component.onMouseDown(event);
-      
+
       expect(component.isDragging).toBe(true);
       expect(event.preventDefault).toHaveBeenCalled();
     });
@@ -171,10 +170,10 @@ describe('PlayingCardComponent', () => {
       component.isDragging = true;
       component['startX'] = 100;
       component['startRotation'] = 0;
-      
+
       const event = new MouseEvent('mousemove', { clientX: 200, clientY: 100 });
       component.onMouseMove(event);
-      
+
       expect(component.rotation).not.toBe(0);
     });
 
@@ -182,10 +181,10 @@ describe('PlayingCardComponent', () => {
       component.draggable = true;
       component.isDragging = false;
       component.rotation = 0;
-      
+
       const event = new MouseEvent('mousemove', { clientX: 200, clientY: 100 });
       component.onMouseMove(event);
-      
+
       expect(component.rotation).toBe(0);
     });
 
@@ -200,10 +199,13 @@ describe('PlayingCardComponent', () => {
     it('should not start dragging on touch if not draggable', () => {
       component.draggable = false;
       const touch = { clientX: 100, clientY: 100 } as Touch;
-      const event = { touches: [touch], preventDefault: jasmine.createSpy('preventDefault') } as any;
-      
+      const event = {
+        touches: [touch],
+        preventDefault: jasmine.createSpy('preventDefault'),
+      } as any;
+
       component.onTouchStart(event);
-      
+
       expect(component.isDragging).toBe(false);
       expect(event.preventDefault).not.toHaveBeenCalled();
     });
@@ -211,10 +213,13 @@ describe('PlayingCardComponent', () => {
     it('should start dragging on touch start when draggable', () => {
       component.draggable = true;
       const touch = { clientX: 100, clientY: 100 } as Touch;
-      const event = { touches: [touch], preventDefault: jasmine.createSpy('preventDefault') } as any;
-      
+      const event = {
+        touches: [touch],
+        preventDefault: jasmine.createSpy('preventDefault'),
+      } as any;
+
       component.onTouchStart(event);
-      
+
       expect(component.isDragging).toBe(true);
       expect(event.preventDefault).toHaveBeenCalled();
     });
@@ -224,11 +229,11 @@ describe('PlayingCardComponent', () => {
       component.isDragging = true;
       component['startX'] = 100;
       component['startRotation'] = 0;
-      
+
       const touch = { clientX: 200, clientY: 100 } as Touch;
       const event = { touches: [touch] } as any;
       component.onTouchMove(event);
-      
+
       expect(component.rotation).not.toBe(0);
     });
 
@@ -236,11 +241,11 @@ describe('PlayingCardComponent', () => {
       component.draggable = true;
       component.isDragging = false;
       component.rotation = 0;
-      
+
       const touch = { clientX: 200, clientY: 100 } as Touch;
       const event = { touches: [touch] } as any;
       component.onTouchMove(event);
-      
+
       expect(component.rotation).toBe(0);
     });
 

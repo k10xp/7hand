@@ -17,7 +17,7 @@ interface ValidationResult {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProfanityValidatorService {
   private apiUrl = '/api';
@@ -32,9 +32,9 @@ export class ProfanityValidatorService {
    * Load profanity rules from backend
    */
   loadRules(): Observable<ProfanityRules> {
-    return this.http.get<ProfanityRules>(`${this.apiUrl}/config/profanity-rules`).pipe(
-      tap(rules => this.rules$.next(rules))
-    );
+    return this.http
+      .get<ProfanityRules>(`${this.apiUrl}/config/profanity-rules`)
+      .pipe(tap((rules) => this.rules$.next(rules)));
   }
 
   /**
@@ -97,13 +97,13 @@ export class ProfanityValidatorService {
     if (this.containsProfanity(text)) {
       return {
         valid: false,
-        error: `${fieldName} contains inappropriate content`
+        error: `${fieldName} contains inappropriate content`,
       };
     }
 
     return {
       valid: true,
-      error: null
+      error: null,
     };
   }
 

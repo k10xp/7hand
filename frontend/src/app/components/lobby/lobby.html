@@ -1,22 +1,15 @@
 <div class="lobby-container">
-  
-    <app-header></app-header>
+  <app-header></app-header>
 
   <div class="card-table">
     <div class="table-surface">
       <!-- Center area with game info -->
       <div class="table-center">
-        <div class="game-status" *ngIf="players.length < 2">
-          Waiting for players...
-        </div>
+        <div class="game-status" *ngIf="players.length < 2">Waiting for players...</div>
         <div class="game-status" *ngIf="players.length >= 2 && !isHost">
           Waiting for host to start
         </div>
-        <button 
-          *ngIf="isHost && players.length >= 2" 
-          class="btn-start-game"
-          (click)="startGame()"
-        >
+        <button *ngIf="isHost && players.length >= 2" class="btn-start-game" (click)="startGame()">
           Start Game
         </button>
       </div>
@@ -96,10 +89,10 @@
   <div class="lobby-footer">
     <div class="game-info">
       <span class="info-label">Share this lobby code with friends:</span>
-      <span class="lobby-code">   <button class="btn-secondary" (click)="copyLobbyLink()">
-        📋 Copy Link
-      </button>{{ lobbyId }}</span>
+      <span class="lobby-code">
+        <button class="btn-secondary" (click)="copyLobbyLink()">📋 Copy Link</button>{{ lobbyId
+        }}</span
+      >
     </div>
   </div>
 </div>
-

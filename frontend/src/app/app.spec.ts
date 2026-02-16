@@ -17,15 +17,16 @@ describe('App', () => {
         {
           provide: HealthService,
           useValue: {
-            getHealth: () => of<HealthStatus>({
-              api: 'ok',
-              apiVersion: '1.0.0',
-              db: 'ok',
-              dbVersion: '14'
-            })
-          }
-        }
-      ]
+            getHealth: () =>
+              of<HealthStatus>({
+                api: 'ok',
+                apiVersion: '1.0.0',
+                db: 'ok',
+                dbVersion: '14',
+              }),
+          },
+        },
+      ],
     }).compileComponents();
   });
 
@@ -34,7 +35,6 @@ describe('App', () => {
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
-
 
   it('should have showLogin property set to true by default', () => {
     const fixture = TestBed.createComponent(App);

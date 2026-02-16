@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './rules-display.html',
-  styleUrl: './rules-display.css'
+  styleUrl: './rules-display.css',
 })
-export class RulesDisplay {
-}
+export class RulesDisplay {}

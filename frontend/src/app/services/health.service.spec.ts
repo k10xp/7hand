@@ -10,11 +10,7 @@ describe('HealthService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(withFetch()),
-        provideHttpClientTesting(),
-        HealthService
-      ]
+      providers: [provideHttpClient(withFetch()), provideHttpClientTesting(), HealthService],
     });
 
     service = TestBed.inject(HealthService);
@@ -26,14 +22,15 @@ describe('HealthService', () => {
   });
 
   it('should emit health status immediately', (done) => {
-    service.getHealth(10000) // large interval so only initial emission
+    service
+      .getHealth(10000) // large interval so only initial emission
       .pipe(take(1))
-      .subscribe(value => {
+      .subscribe((value) => {
         expect(value).toEqual({
           api: 'ok',
           apiVersion: '1.2.3',
           db: 'ok',
-          dbVersion: '14'
+          dbVersion: '14',
         });
         done();
       });
@@ -44,7 +41,7 @@ describe('HealthService', () => {
       api: 'ok',
       apiVersion: '1.2.3',
       db: 'ok',
-      dbVersion: '14'
+      dbVersion: '14',
     };
     req.flush(payload);
   });

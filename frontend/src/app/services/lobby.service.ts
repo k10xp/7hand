@@ -24,7 +24,7 @@ export interface GameState {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LobbyService {
   private currentLobby$ = new BehaviorSubject<Lobby | null>(null);
@@ -50,45 +50,43 @@ export class LobbyService {
    * Create a new lobby
    */
   createLobby(userId: string): Observable<Lobby> {
-    return this.http.post<Lobby>('/api/lobby', { userId }).pipe(
-      tap(lobby => this.currentLobby$.next(lobby))
-    );
+    return this.http
+      .post<Lobby>('/api/lobby', { userId })
+      .pipe(tap((lobby) => this.currentLobby$.next(lobby)));
   }
 
   /**
    * Join an existing lobby
    */
   joinLobby(lobbyId: string, userId: string): Observable<Lobby> {
-    return this.http.post<Lobby>(`/api/lobby/${lobbyId}/join`, { userId }).pipe(
-      tap(lobby => this.currentLobby$.next(lobby))
-    );
+    return this.http
+      .post<Lobby>(`/api/lobby/${lobbyId}/join`, { userId })
+      .pipe(tap((lobby) => this.currentLobby$.next(lobby)));
   }
 
   /**
    * Get lobby details
    */
   getLobby(lobbyId: string): Observable<Lobby> {
-    return this.http.get<Lobby>(`/api/lobby/${lobbyId}`).pipe(
-      tap(lobby => this.currentLobby$.next(lobby))
-    );
+    return this.http
+      .get<Lobby>(`/api/lobby/${lobbyId}`)
+      .pipe(tap((lobby) => this.currentLobby$.next(lobby)));
   }
 
   /**
    * Leave lobby
    */
   leaveLobby(lobbyId: string, userId: string): Observable<any> {
-    return this.http.post(`/api/lobby/${lobbyId}/leave`, { userId }).pipe(
-      tap(() => this.currentLobby$.next(null))
-    );
+    return this.http
+      .post(`/api/lobby/${lobbyId}/leave`, { userId })
+      .pipe(tap(() => this.currentLobby$.next(null)));
   }
 
   /**
    * Delete lobby (host only)
    */
   deleteLobby(lobbyId: string): Observable<any> {
-    return this.http.delete(`/api/lobby/${lobbyId}`).pipe(
-      tap(() => this.currentLobby$.next(null))
-    );
+    return this.http.delete(`/api/lobby/${lobbyId}`).pipe(tap(() => this.currentLobby$.next(null)));
   }
 
   /**
@@ -113,7 +111,7 @@ export class LobbyService {
     if (currentLobby) {
       const updatedLobby = {
         ...currentLobby,
-        users: [...currentLobby.users, player]
+        users: [...currentLobby.users, player],
       };
       this.currentLobby$.next(updatedLobby);
     }
@@ -127,7 +125,7 @@ export class LobbyService {
     if (currentLobby) {
       const updatedLobby = {
         ...currentLobby,
-        users: currentLobby.users.filter(u => u.id !== playerId)
+        users: currentLobby.users.filter((u) => u.id !== playerId),
       };
       this.currentLobby$.next(updatedLobby);
     }

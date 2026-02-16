@@ -14,17 +14,17 @@ describe('Lobby', () => {
     mockActivatedRoute = {
       snapshot: {
         paramMap: {
-          get: jasmine.createSpy('get').and.returnValue('test-lobby-id')
-        }
-      }
+          get: jasmine.createSpy('get').and.returnValue('test-lobby-id'),
+        },
+      },
     };
 
     await TestBed.configureTestingModule({
       imports: [Lobby],
       providers: [
         { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
-      ]
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Lobby);
@@ -43,7 +43,7 @@ describe('Lobby', () => {
   it('should identify empty seats', () => {
     component.players = [
       { id: '1', username: 'player1', displayName: 'Player 1', position: 0 },
-      { id: '2', username: 'player2', displayName: 'Player 2', position: 2 }
+      { id: '2', username: 'player2', displayName: 'Player 2', position: 2 },
     ];
 
     const emptySeats = component.getEmptySeats();
@@ -59,9 +59,7 @@ describe('Lobby', () => {
   });
 
   it('should check if position is occupied', () => {
-    component.players = [
-      { id: '1', username: 'player1', displayName: 'Player 1', position: 0 }
-    ];
+    component.players = [{ id: '1', username: 'player1', displayName: 'Player 1', position: 0 }];
 
     expect(component.isPositionOccupied(0)).toBe(true);
     expect(component.isPositionOccupied(1)).toBe(false);
@@ -76,10 +74,10 @@ describe('Lobby', () => {
     component.currentUserId = '1';
     component.players = [
       { id: '1', username: 'player1', displayName: 'Player 1', position: 0 },
-      { id: '2', username: 'player2', displayName: 'Player 2', position: 1 }
+      { id: '2', username: 'player2', displayName: 'Player 2', position: 1 },
     ];
     component.loadLobby();
-    
+
     expect(component.isHost).toBe(true);
   });
 });

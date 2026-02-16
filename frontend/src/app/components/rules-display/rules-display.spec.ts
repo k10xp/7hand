@@ -7,7 +7,7 @@ describe('RulesDisplay', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RulesDisplay]
+      imports: [RulesDisplay],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RulesDisplay);

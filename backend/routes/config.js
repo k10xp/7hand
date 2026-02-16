@@ -8,7 +8,7 @@ router.get('/profanity-rules', (req, res) => {
   // Frontend should mirror backend validation
   res.json({
     slurList: SLUR_LIST,
-    obfuscationPatterns: OBFUSCATION_PATTERNS.map(p => p.source)
+    obfuscationPatterns: OBFUSCATION_PATTERNS.map((p) => p.source),
   });
 });
 
