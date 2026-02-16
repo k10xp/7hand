@@ -5,9 +5,9 @@ permissions:
   pull-requests: read
 
 on:
-  pull_request:
-    types:
-      - closed
+  # pull_request:
+  #   types:
+  #     - closed
 
 jobs:
   delete-branch:

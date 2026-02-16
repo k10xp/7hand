@@ -3,14 +3,14 @@ permissions:
   contents: read
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-    paths:
-      - 'selenium/**'
-      - 'docker-compose.yml'
-      - '.github/workflows/selenium-ci.yml'
+  # push:
+  #   branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
+  #   paths:
+  #     - 'selenium/**'
+  #     - 'docker-compose.yml'
+  #     - '.github/workflows/selenium-ci.yml'
   workflow_dispatch:
 
 jobs:
@@ -100,7 +100,7 @@ jobs:
             echo "Waiting for Selenium Grid... ($i/60)"
             sleep 5
           done
-          
+
           # Wait for both browser nodes to register
           echo "Waiting for browser nodes to register..."
           for i in {1..30}; do
@@ -113,7 +113,7 @@ jobs:
             echo "Waiting for browser nodes... ($i/30)"
             sleep 10
           done
-          
+
           # Show final grid status
           echo "Final Selenium Grid Status:"
           curl -s http://localhost:4444/wd/hub/status || echo "Failed to get status"
