@@ -11,17 +11,23 @@ class User {
     this.username = data.username;
     this.displayName = data.displayName || data.username;
     this.email = data.email || null;
-    this.password = data.password || null; // Plain text password (only during creation/update)
-    this.passwordHash = data.passwordHash || null; // Stored hash
+
+    // Password data: plain text only on creation/update; hash for storage
+    this.password = data.password || null;
+    this.passwordHash = data.passwordHash || null;
+
     this.lobbyId = data.lobbyId || null;
-    this.createdAt = data.createdAt || new Date();
-    this.updatedAt = data.updatedAt || new Date();
-    this.lastActive = data.lastActive || new Date();
+    const now = new Date();
+
+    this.createdAt = data.createdAt || now;
+    this.updatedAt = data.updatedAt || now;
+    this.lastActive = data.lastActive || now;
+
     this.coins = data.coins ?? 0;
     this.stats = data.stats || {
       gamesPlayed: 0,
       gamesWon: 0,
-      gamesLost: 0
+      gamesLost: 0,
     };
   }
 
@@ -32,6 +38,7 @@ class User {
   validate() {
     const errors = [];
 
+    // Username validation
     if (!this.username || typeof this.username !== 'string') {
       errors.push('Username is required and must be a string');
     } else if (this.username.length < 3 || this.username.length > 20) {
@@ -39,40 +46,35 @@ class User {
     } else if (!/^[a-zA-Z0-9_-]+$/.test(this.username)) {
       errors.push('Username can only contain letters, numbers, hyphens, and underscores');
     } else {
-      // Check for profanity only if basic validation passes
       const profanityCheck = validateUsername(this.username);
-      if (!profanityCheck.valid) {
-        errors.push(profanityCheck.error);
+      if (!profanityCheck.valid) errors.push(profanityCheck.error);
+    }
+
+    // Display name validation
+    if (this.displayName) {
+      if (this.displayName.length > 30) {
+        errors.push('Display name must be 30 characters or less');
+      } else {
+        const profanityCheck = validateDisplayName(this.displayName);
+        if (!profanityCheck.valid) errors.push(profanityCheck.error);
       }
     }
 
-    if (this.displayName && this.displayName.length > 30) {
-      errors.push('Display name must be 30 characters or less');
-    } else if (this.displayName) {
-      // Check display name for profanity
-      const profanityCheck = validateDisplayName(this.displayName);
-      if (!profanityCheck.valid) {
-        errors.push(profanityCheck.error);
-      }
-    }
-
-    // Use a simpler email regex that's not vulnerable to ReDoS
+    // Email validation (safe regex)
     if (this.email && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this.email)) {
       errors.push('Invalid email format');
     }
 
-    return {
-      valid: errors.length === 0,
-      errors
-    };
+    return { valid: errors.length === 0, errors };
   }
 
   /**
    * Updates the last active timestamp
    */
   updateActivity() {
-    this.lastActive = new Date();
-    this.updatedAt = new Date();
+    const now = new Date();
+    this.lastActive = now;
+    this.updatedAt = now;
   }
 
   /**
@@ -91,7 +93,7 @@ class User {
   async hashPassword() {
     if (this.password) {
       this.passwordHash = await bcrypt.hash(this.password, 10);
-      this.password = null; // Clear plain text password
+      this.password = null;
     }
   }
 
@@ -102,7 +104,7 @@ class User {
    */
   async verifyPassword(password) {
     if (!this.passwordHash) return false;
-    return await bcrypt.compare(password, this.passwordHash);
+    return bcrypt.compare(password, this.passwordHash);
   }
 
   /**
@@ -117,7 +119,7 @@ class User {
       coins: this.coins,
       stats: this.stats,
       createdAt: this.createdAt,
-      lastActive: this.lastActive
+      lastActive: this.lastActive,
     };
   }
 }
@@ -134,11 +136,9 @@ class UserManager {
    */
   createUser(userData) {
     const user = new User(userData);
-    const validation = user.validate();
-    
-    if (!validation.valid) {
-      throw new Error(`User validation failed: ${validation.errors.join(', ')}`);
-    }
+    const { valid, errors } = user.validate();
+
+    if (!valid) throw new Error(`User validation failed: ${errors.join(', ')}`);
 
     this.users.set(user.id, user);
     return user;
@@ -159,12 +159,7 @@ class UserManager {
    * @returns {User|undefined}
    */
   getUserByUsername(username) {
-    for (const user of this.users.values()) {
-      if (user.username === username) {
-        return user;
-      }
-    }
-    return undefined;
+    return [...this.users.values()].find((user) => user.username === username);
   }
 
   /**
@@ -177,18 +172,17 @@ class UserManager {
     const user = this.users.get(userId);
     if (!user) return null;
 
-    // Update allowed fields
-    if (updates.displayName !== undefined) user.displayName = updates.displayName;
-    if (updates.email !== undefined) user.email = updates.email;
-    if (updates.stats !== undefined) user.updateStats(updates.stats);
-    if (updates.coins !== undefined) user.coins = updates.coins;
+    const allowedFields = ['displayName', 'email', 'stats', 'coins'];
+    for (const key of allowedFields) {
+      if (updates[key] !== undefined) {
+        key === 'stats' ? user.updateStats(updates.stats) : (user[key] = updates[key]);
+      }
+    }
 
     user.updatedAt = new Date();
 
-    const validation = user.validate();
-    if (!validation.valid) {
-      throw new Error(`User validation failed: ${validation.errors.join(', ')}`);
-    }
+    const { valid, errors } = user.validate();
+    if (!valid) throw new Error(`User validation failed: ${errors.join(', ')}`);
 
     return user;
   }
@@ -209,12 +203,9 @@ class UserManager {
 async function saveUserToDb(user) {
   const pool = getPool();
   const now = new Date();
-  
-  // Hash password if needed
-  if (user.password) {
-    await user.hashPassword();
-  }
-  
+
+  if (user.password) await user.hashPassword();
+
   await pool.query(
     `INSERT INTO users (id, username, display_name, email, created_at, updated_at, last_active, coins, stats, password_hash)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
@@ -237,7 +228,7 @@ async function saveUserToDb(user) {
       user.lastActive || now,
       user.coins,
       JSON.stringify(user.stats),
-      user.passwordHash
+      user.passwordHash,
     ]
   );
 }
@@ -258,8 +249,8 @@ async function removeUserFromDb(userId) {
  */
 async function loadUserFromDb(userId) {
   const pool = getPool();
-  const res = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
-  return res.rows[0] || null;
+  const result = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
+  return result.rows[0] || null;
 }
 
 /**
@@ -269,8 +260,8 @@ async function loadUserFromDb(userId) {
  */
 async function loadUserByUsernameFromDb(username) {
   const pool = getPool();
-  const res = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
-  return res.rows[0] || null;
+  const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+  return result.rows[0] || null;
 }
 
 /**
@@ -279,8 +270,8 @@ async function loadUserByUsernameFromDb(username) {
  */
 async function loadAllUsersFromDb() {
   const pool = getPool();
-  const res = await pool.query('SELECT * FROM users ORDER BY created_at DESC');
-  return res.rows;
+  const result = await pool.query('SELECT * FROM users ORDER BY created_at DESC');
+  return result.rows;
 }
 
 /**
@@ -289,10 +280,11 @@ async function loadAllUsersFromDb() {
  */
 async function updateUserActivity(userId) {
   const pool = getPool();
-  await pool.query(
-    'UPDATE users SET last_active = $1, updated_at = $1 WHERE id = $2',
-    [new Date(), userId]
-  );
+  const now = new Date();
+  await pool.query('UPDATE users SET last_active = $1, updated_at = $1 WHERE id = $2', [
+    now,
+    userId,
+  ]);
 }
 
 module.exports = {
@@ -303,5 +295,5 @@ module.exports = {
   loadUserFromDb,
   loadUserByUsernameFromDb,
   loadAllUsersFromDb,
-  updateUserActivity
+  updateUserActivity,
 };

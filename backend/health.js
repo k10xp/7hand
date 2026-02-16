@@ -2,21 +2,22 @@
 const { getPool } = require('./db');
 
 async function getHealthStatus(logger) {
-  let dbStatus = 'down';
-  let dbVersion = null;
-  try {
-    const result = await getPool().query('SELECT version()');
-    dbStatus = 'up';
-    dbVersion = result.rows[0].version;
-  } catch (err) {
-    if (logger) logger.error('DB health check failed:', err);
-  }
-  return {
+  const status = {
     api: 'up',
     apiVersion: process.env.npm_package_version || '1.0.0',
-    db: dbStatus,
-    dbVersion: dbVersion,
+    db: 'down',
+    dbVersion: null,
   };
+
+  try {
+    const { rows } = await getPool().query('SELECT version()');
+    status.db = 'up';
+    status.dbVersion = rows[0]?.version ?? null;
+  } catch (error) {
+    logger?.error?.('DB health check failed:', error);
+  }
+
+  return status;
 }
 
 module.exports = { getHealthStatus };

@@ -5,7 +5,7 @@ services:
     build: ./nginx-proxy
     container_name: sevenhand-proxy
     ports:
-      - "8000:8000"
+      - '8000:8000'
     depends_on:
       - frontend
       - backend
@@ -28,17 +28,17 @@ services:
       target: dev
       dockerfile: Dockerfile
     ports:
-      - "4200:4200"
+      - '4200:4200'
     depends_on:
       - backend
       - db
     environment:
-      CI: "false"
-      CHOKIDAR_USEPOLLING: "true"
+      CI: 'false'
+      CHOKIDAR_USEPOLLING: 'true'
     volumes:
       - ./frontend:/workspace:cached
       - frontend-node_modules:/workspace/node_modules
-    command: ["npm", "start", "--", "--host", "0.0.0.0", "--poll", "2000"]
+    command: ['npm', 'start', '--', '--host', '0.0.0.0', '--poll', '2000']
     networks:
       - app-network
 
@@ -74,7 +74,7 @@ services:
     image: selenium/hub:4.15.0
     container_name: selenium-hub
     ports:
-      - "4444:4444"
+      - '4444:4444'
 
   # Chrome Node
   selenium-chrome:
@@ -111,8 +111,8 @@ services:
     environment:
       SELENIUM_REMOTE_URL: http://selenium-hub:4444/wd/hub
     ports:
-      - "8080:8080"
-    command: ["sh", "-c", "sleep 30 && npm run test:demo"]
+      - '8080:8080'
+    command: ['sh', '-c', 'sleep 30 && npm run test:demo']
 
 volumes:
   db-data:

@@ -9,7 +9,7 @@
 			"problemMatcher": [],
 			"group": "none",
 			"runOptions": {
-				"runOn": "folderOpen"
+				"runOn": "default"
 			}
 		},
 		{
